@@ -1,0 +1,51 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% block content %}
+<div class="panel">
+    <h3>Customer List</h3>
+    <form method="post" action="{{ path('admin_appointmentmanager_itinerarymap') }}">
+    <table class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select_all"/></th>
+                <th>ID</th>
+                <th>Lastname</th>
+                <th>Firstname</th>
+                <th>Address</th>
+                <th>Postal Code</th>
+                <th>City</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Rdv Option 1</th>
+                <th>Rdv Option 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td><input type="checkbox" name="appointments[]" value="{{ appointment.id_appointment_manager }}"/></td>
+                <td>{{ appointment.id_appointment_manager }}</td>
+                <td>{{ appointment.lastname }}</td>
+                <td>{{ appointment.firstname }}</td>
+                <td>{{ appointment.address }}</td>
+                <td>{{ appointment.postal_code }}</td>
+                <td>{{ appointment.city }}</td>
+                <td>{{ appointment.phone }}</td>
+                <td>{{ appointment.email }}</td>
+                <td>{{ appointment.rdv_option_1 }}</td>
+                <td>{{ appointment.rdv_option_2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-success">Make itinerary</button>
+    </form>
+</div>
+<script>
+document.getElementById('select_all').addEventListener('click', function(e){
+    var checkboxes = document.querySelectorAll('input[name="appointments[]"]');
+    for(var i=0;i<checkboxes.length;i++){
+        checkboxes[i].checked = e.target.checked;
+    }
+});
+</script>
+{% endblock %}
