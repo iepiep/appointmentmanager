@@ -5,11 +5,12 @@
  * Author: Roberto Minini (iepiep74@gmail.com)
  * License: MIT License
  */
-if (!defined('_PS_VERSION_')) {
+
+ namespace AppointmentManager\Form;
+
+ if (!defined('_PS_VERSION_')) {
     exit;
 }
-
-namespace AppointmentManager\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

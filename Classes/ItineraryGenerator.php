@@ -5,11 +5,12 @@
  * Author: Roberto Minini (iepiep74@gmail.com)
  * License: MIT License
  */
+
+namespace AppointmentManager\Classes;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
-namespace AppointmentManager\Classes;
 
 class ItineraryGenerator
 {

@@ -5,11 +5,12 @@
  * Author: Roberto Minini (iepiep74@gmail.com)
  * License: MIT License
  */
-if (!defined('_PS_VERSION_')) {
+
+ namespace AppointmentManager\Controller\Admin;
+
+ if (!defined('_PS_VERSION_')) {
     exit;
 }
-
-namespace AppointmentManager\Controller\Admin;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
