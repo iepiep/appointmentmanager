@@ -17,7 +17,7 @@ class AppointmentManager extends Module
     public function __construct()
     {
         $this->name = 'appointmentmanager';
-        $this->tab = 'administration';
+        $this->tab = 'shipping_logistics';
         $this->version = '1.0.0';
         $this->author = 'Roberto Minini';
         $this->need_instance = 0;
@@ -77,7 +77,7 @@ class AppointmentManager extends Module
             }
         }
         return true;
-    }     
+    }
     protected function uninstallDB()
     {
         $sql = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'appointment_manager`';
