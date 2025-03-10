@@ -1,0 +1,11 @@
+admin_appointmentmanager_config:
+  path: /appointmentmanager/config
+  defaults:
+    _controller: 'AppointmentManager\Controller\Admin\ConfigController::indexAction'
+  methods: [GET, POST]
+
+admin_appointmentmanager_customerlist:
+  path: /appointmentmanager/customerlist
+  defaults:
+    _controller: 'AppointmentManager\Controller\Admin\CustomerListController::indexAction'
+  methods: [GET]

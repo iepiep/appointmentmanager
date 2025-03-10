@@ -85,6 +85,7 @@ class AppointmentManager extends Module
     }
     protected function installTabs()
     {
+        // Main tab
         $mainTab = new Tab();
         $mainTab->active = 1;
         $mainTab->class_name = 'AdminAppointmentManager';
@@ -92,12 +93,12 @@ class AppointmentManager extends Module
         foreach (Language::getLanguages(true) as $lang) {
             $mainTab->name[$lang['id_lang']] = 'AppointmentManager';
         }
-        // Placer le module sous le parent des modules Symfony :
-        $mainTab->id_parent = Tab::getIdFromClassName('AdminParentModulesSf');
+        $mainTab->id_parent = 0; // Niveau racine
         $mainTab->module = $this->name;
         if (!$mainTab->add()) {
             return false;
         }
+        // Onglet Config
         $configTab = new Tab();
         $configTab->active = 1;
         $configTab->class_name = 'AdminAppointmentManagerConfig';
@@ -107,9 +108,12 @@ class AppointmentManager extends Module
         }
         $configTab->id_parent = $mainTab->id;
         $configTab->module = $this->name;
+        // Ajout du nom de route pour le contrôleur Config
+        $configTab->route_name = 'admin_appointmentmanager_config';
         if (!$configTab->add()) {
             return false;
         }
+        // Onglet CustomerList
         $customerListTab = new Tab();
         $customerListTab->active = 1;
         $customerListTab->class_name = 'AdminAppointmentManagerCustomerList';
@@ -119,11 +123,13 @@ class AppointmentManager extends Module
         }
         $customerListTab->id_parent = $mainTab->id;
         $customerListTab->module = $this->name;
+        // Ajout du nom de route pour le contrôleur CustomerList
+        $customerListTab->route_name = 'admin_appointmentmanager_customerlist';
         if (!$customerListTab->add()) {
             return false;
         }
         return true;
-    }
+    }    
     protected function uninstallTabs()
     {
         $tabs = array('AdminAppointmentManager', 'AdminAppointmentManagerConfig', 'AdminAppointmentManagerCustomerList');
