@@ -64,11 +64,20 @@ class AppointmentManager extends Module
         if (!file_exists($sql_file)) {
             return false;
         }
-        // Utiliser Tools::file_get_contents() au lieu de file_get_contents()
-        $sql = Tools::file_get_contents($sql_file);
-        $sql = str_replace('Prefix_', _DB_PREFIX_, $sql);
-        return Db::getInstance()->execute($sql);
-    }
+        // Lecture du contenu du fichier SQL en utilisant Tools::file_get_contents()
+        $sql_content = Tools::file_get_contents($sql_file);
+        $sql_content = str_replace('Prefix_', _DB_PREFIX_, $sql_content);
+        // Séparation des requêtes par point-virgule
+        $sql_queries = array_filter(array_map('trim', explode(';', $sql_content)));
+        foreach ($sql_queries as $query) {
+            if (!empty($query)) {
+                if (!Db::getInstance()->execute($query)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }    
     protected function uninstallDB()
     {
         $sql = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'appointment_manager`';
