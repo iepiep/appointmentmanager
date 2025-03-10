@@ -21,7 +21,6 @@ use Tools;
 
 class AppointmentFormModuleFrontController extends ModuleFrontController
 {
-
     public function initContent()
     {
         parent::initContent();  // Call parent's initContent
@@ -30,7 +29,7 @@ class AppointmentFormModuleFrontController extends ModuleFrontController
     }
     protected function processForm()
     {
-         if (Tools::isSubmit('submitAppointmentForm')) {  // Use a named submit button
+        if (Tools::isSubmit('submitAppointmentForm')) {  // Use a named submit button
 
             $lastname = Tools::getValue('lastname');
             $firstname = Tools::getValue('firstname');
@@ -43,7 +42,7 @@ class AppointmentFormModuleFrontController extends ModuleFrontController
             $rdv_option_2 = Tools::getValue('rdv_option_2');
             $gdpr = Tools::getValue('GDPR');
 
-             // Basic Validation (add more as needed)
+            // Basic Validation (add more as needed)
             $errors = [];
 
             if (empty($lastname)) {
@@ -55,24 +54,24 @@ class AppointmentFormModuleFrontController extends ModuleFrontController
             // ... other required field checks ...
 
             if (empty($phone) && empty($email)) {
-                 $errors[] = $this->module->trans('At least one of phone or email must be provided.', [], 'Modules.Appointmentmanager.Front');
+                $errors[] = $this->module->trans('At least one of phone or email must be provided.', [], 'Modules.Appointmentmanager.Front');
             }
             if (!empty($email) && !Validate::isEmail($email)) {
                 $errors[] = $this->module->trans('Invalid email address.', [], 'Modules.Appointmentmanager.Front');
             }
-            if (!Validate::isAddress($address)){
-                  $errors[] = $this->module->trans('Invalid address.', [], 'Modules.Appointmentmanager.Front');
+            if (!Validate::isAddress($address)) {
+                $errors[] = $this->module->trans('Invalid address.', [], 'Modules.Appointmentmanager.Front');
             }
-              // ... other validations (postal code, city, etc.) ...
-             if (!$gdpr) {
+            // ... other validations (postal code, city, etc.) ...
+            if (!$gdpr) {
                 $errors[] = $this->module->trans('You must accept the data processing terms.', [], 'Modules.Appointmentmanager.Front');
             }
 
-             if (!empty($errors)) {
+            if (!empty($errors)) {
                 $this->context->smarty->assign('errors', $errors);
                 return; // Stop processing if there are errors
             }
-              // Data is valid, insert into database (using prepared statement)
+            // Data is valid, insert into database (using prepared statement)
             try {
                 $success = Db::getInstance()->insert('appointment_manager', [
                     'lastname'     => pSQL($lastname),
@@ -91,24 +90,24 @@ class AppointmentFormModuleFrontController extends ModuleFrontController
                 ]);
 
                 if ($success) {
-                     $this->context->smarty->assign('success', $this->module->trans('Appointment submitted successfully.', [], 'Modules.Appointmentmanager.Front'));
-                     // Optionally, send a confirmation email here
+                    $this->context->smarty->assign('success', $this->module->trans('Appointment submitted successfully.', [], 'Modules.Appointmentmanager.Front'));
+                    // Optionally, send a confirmation email here
                 } else {
-                     $this->context->smarty->assign('errors', [$this->module->trans('An error occurred while saving the appointment.', [], 'Modules.Appointmentmanager.Front')]); // Display a generic error
+                    $this->context->smarty->assign('errors', [$this->module->trans('An error occurred while saving the appointment.', [], 'Modules.Appointmentmanager.Front')]); // Display a generic error
                 }
 
             } catch (PrestaShopDatabaseException $e) {
                 // Handle database errors (log, display error message, etc.)
-                 $this->context->smarty->assign('errors', [$this->module->trans('A database error occurred.', [], 'Modules.Appointmentmanager.Front')]); // Generic error message for the user
+                $this->context->smarty->assign('errors', [$this->module->trans('A database error occurred.', [], 'Modules.Appointmentmanager.Front')]); // Generic error message for the user
                 PrestaShopLogger::addLog('Appointment form submission error: ' . $e->getMessage(), 3); // Log the full error
 
             }
-         }
+        }
     }
 
     protected function renderForm()
     {
-       // Generate available dates (example, adjust as needed)
+        // Generate available dates (example, adjust as needed)
         $dates = [];
         $today = new \DateTime();
         $interval = new \DateInterval('P1D');
