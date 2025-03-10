@@ -12,7 +12,6 @@ if (!defined('_PS_VERSION_')) {
 
 class AppointmentManager extends Module
 {
-    public $ps_versions_compliancy = array('min' => '8.0.0', 'max' => _PS_VERSION_);
 
     public function __construct()
     {
@@ -25,6 +24,7 @@ class AppointmentManager extends Module
         parent::__construct();
         $this->displayName = $this->l('Appointment Manager');
         $this->description = $this->l('Module to manage appointments.');
+        $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => '8.99.99'];
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
     }
     public function install()
