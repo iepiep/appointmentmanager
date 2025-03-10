@@ -12,10 +12,10 @@
     exit;
 }
 
-use PrestaShopBundle\Controller\Front\FrontController;
+use ModuleFrontController;
 use Symfony\Component\HttpFoundation\Request;
 
-class AppointmentFormController extends FrontController
+class AppointmentFormModuleFrontController extends ModuleFrontController
 {
     public function indexAction(Request $request)
     {
