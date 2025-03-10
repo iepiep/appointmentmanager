@@ -11,9 +11,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 class AppointmentManager extends Module
 {
-
     public function __construct()
     {
         $this->name = 'appointmentmanager';
@@ -64,19 +65,30 @@ class AppointmentManager extends Module
         if (!file_exists($sql_file)) {
             return false;
         }
-        // Utiliser Tools::file_get_contents() pour lire le fichier SQL
+
         $sql_content = Tools::file_get_contents($sql_file);
         $sql_content = str_replace('Prefix_', _DB_PREFIX_, $sql_content);
-        // Séparer les requêtes à chaque point-virgule
         $sql_queries = array_filter(array_map('trim', explode(';', $sql_content)));
-        foreach ($sql_queries as $query) {
-            if (!empty($query)) {
-                if (!Db::getInstance()->execute($query)) {
-                    return false;
+
+        Db::getInstance()->execute('START TRANSACTION'); // Begin transaction
+
+        try {
+            foreach ($sql_queries as $query) {
+                if (!empty($query)) {
+                    if (!Db::getInstance()->execute($query)) {
+                        throw new PrestaShopDatabaseException('Error executing query: ' . $query); // More informative error
+                    }
                 }
             }
+            Db::getInstance()->execute('COMMIT'); // Commit transaction
+            return true;
+
+        } catch (PrestaShopDatabaseException $e) {
+            Db::getInstance()->execute('ROLLBACK'); // Rollback in case of error
+            $this->context->controller->errors[] = $e->getMessage(); // Display error to user
+            PrestaShopLogger::addLog($e->getMessage(), 3, null, 'AppointmentManager', $this->id, true); // Log detailed error
+            return false;
         }
-        return true;
     }
     protected function uninstallDB()
     {
@@ -91,45 +103,60 @@ class AppointmentManager extends Module
         $mainTab->class_name = 'AdminAppointmentManager';
         $mainTab->name = array();
         foreach (Language::getLanguages(true) as $lang) {
-            $mainTab->name[$lang['id_lang']] = 'AppointmentManager';
+            $mainTab->name[$lang['id_lang']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin'); // Use translations
         }
-        $mainTab->id_parent = 0;
+        $mainTab->id_parent = -1; // No parent, directly in the menu.  Or 0 if you *do* want it under a main menu item
         $mainTab->module = $this->name;
-        // Affecter ici la classe d'icône souhaitée (exemple : icon-calendar)
         $mainTab->icon = 'local_shipping';
+        //$mainTab->route_name = ''; // If you *do* want a route for the main tab, define it here and in route.yml
         if (!$mainTab->add()) {
             return false;
         }
+
         // Onglet Config
         $configTab = new Tab();
         $configTab->active = 1;
         $configTab->class_name = 'AdminAppointmentManagerConfig';
         $configTab->name = array();
         foreach (Language::getLanguages(true) as $lang) {
-            $configTab->name[$lang['id_lang']] = 'Config';
+            $configTab->name[$lang['id_lang']] = $this->trans('Config', [], 'Modules.Appointmentmanager.Admin');
         }
-        $configTab->id_parent = $mainTab->id;
+        $configTab->id_parent = $mainTab->id; // Correct parent ID
         $configTab->module = $this->name;
-        // Exemple d'icône pour Config
         $configTab->icon = 'settings';
-        $configTab->route_name = 'admin_appointmentmanager_config';
+        $configTab->route_name = 'admin_appointmentmanager_config';  // Correct route name
         if (!$configTab->add()) {
             return false;
         }
+
         // Onglet CustomerList
         $customerListTab = new Tab();
         $customerListTab->active = 1;
         $customerListTab->class_name = 'AdminAppointmentManagerCustomerList';
         $customerListTab->name = array();
         foreach (Language::getLanguages(true) as $lang) {
-            $customerListTab->name[$lang['id_lang']] = 'CustomerList';
+            $customerListTab->name[$lang['id_lang']] = $this->trans('Customer List', [], 'Modules.Appointmentmanager.Admin');
         }
         $customerListTab->id_parent = $mainTab->id;
         $customerListTab->module = $this->name;
-        // Exemple d'icône pour CustomerList
         $customerListTab->icon = 'description';
-        $customerListTab->route_name = 'admin_appointmentmanager_customerlist';
+        $customerListTab->route_name = 'admin_appointmentmanager_customerlist'; // Correct route name
         if (!$customerListTab->add()) {
+            return false;
+        }
+        // Onglet ItineraryMap
+        $itineraryMapTab = new Tab();
+        $itineraryMapTab->active = 1;
+        $itineraryMapTab->class_name = 'AdminAppointmentManagerItineraryMap';
+        $itineraryMapTab->name = array();
+        foreach (Language::getLanguages(true) as $lang) {
+            $itineraryMapTab->name[$lang['id_lang']] = $this->trans('Itinerary Map', [], 'Modules.Appointmentmanager.Admin');
+        }
+        $itineraryMapTab->id_parent = $mainTab->id;
+        $itineraryMapTab->module = $this->name;
+        $itineraryMapTab->icon = 'map';  // Choose an appropriate icon
+        $itineraryMapTab->route_name = 'admin_appointmentmanager_itinerarymap'; // Define the route
+        if (!$itineraryMapTab->add()) {
             return false;
         }
         return true;
@@ -154,27 +181,35 @@ class AppointmentManager extends Module
     }
     public function getContent()
     {
-        $output = '';
+
         if (Tools::isSubmit('submitAppointmentManagerReset')) {
             if (Tools::getValue('confirm_reset') == '1') {
-                $this->resetModule();
-                $output .= $this->displayConfirmation($this->l('Test data removed successfully.'));
+                if ($this->resetModule()) {
+                    $this->context->controller->confirmations[] = $this->trans('Test data removed successfully.', [], 'Modules.Appointmentmanager.Admin');
+                } else {
+                    $this->context->controller->errors[] = $this->trans('An error occurred while removing test data.', [], 'Modules.Appointmentmanager.Admin');
+                }
             } else {
-                $output .= $this->displayError($this->l('Reset cancelled.'));
+                $this->context->controller->warnings[] = $this->trans('Reset cancelled.', [], 'Modules.Appointmentmanager.Admin'); // Use warnings for non-critical messages
             }
         }
         Tools::redirectAdmin($this->context->link->getAdminLink('AdminAppointmentManagerConfig'));
     }
-    public function hookDisplayHome($params)
+    private function _displayAppointmentBlock($params)
     {
         $this->context->smarty->assign(array(
-            'appointment_message' => 'Prenez rendez-vous pour votre diagnostic immobilier',
-            'appointment_link' => $this->context->link->getModuleLink($this->name, 'appointmentmoduleform')
-        ));
-        return $this->display(__FILE__, 'views/templates/front/appointment_block.tpl');
+          'appointment_message' => $this->trans('Prenez rendez-vous pour votre diagnostic immobilier', [], 'Modules.Appointmentmanager.Front'),
+          'appointment_link' => $this->context->link->getModuleLink($this->name, 'appointmentmoduleform')
+      ));
+        return $this->fetch('module:'.$this->name.'/views/templates/front/appointment_block.tpl');
     }
+    public function hookDisplayHome($params)
+    {
+        return $this->_displayAppointmentBlock($params);
+    }
+
     public function hookDisplayBanner($params)
     {
-        return $this->hookDisplayHome($params);
+        return $this->_displayAppointmentBlock($params);
     }
 }

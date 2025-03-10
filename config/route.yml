@@ -9,3 +9,9 @@ admin_appointmentmanager_customerlist:
   defaults:
     _controller: 'AppointmentManager\Controller\Admin\CustomerListController::indexAction'
   methods: [GET]
+
+admin_appointmentmanager_itinerarymap:  # Add the route for the itinerary map
+  path: /appointmentmanager/itinerarymap
+  defaults:
+    _controller: 'AppointmentManager\Controller\Admin\ItineraryMapController::indexAction'
+  methods: [GET, POST] # Allow POST for form submission
