@@ -85,7 +85,7 @@ class AppointmentManager extends Module
     }
     protected function installTabs()
     {
-        // Main tab
+        // Onglet principal
         $mainTab = new Tab();
         $mainTab->active = 1;
         $mainTab->class_name = 'AdminAppointmentManager';
@@ -93,8 +93,10 @@ class AppointmentManager extends Module
         foreach (Language::getLanguages(true) as $lang) {
             $mainTab->name[$lang['id_lang']] = 'AppointmentManager';
         }
-        $mainTab->id_parent = 0; // Niveau racine
+        $mainTab->id_parent = 0;
         $mainTab->module = $this->name;
+        // Affecter ici la classe d'icône souhaitée (exemple : icon-calendar)
+        $mainTab->icon = 'local_shipping';
         if (!$mainTab->add()) {
             return false;
         }
@@ -108,7 +110,8 @@ class AppointmentManager extends Module
         }
         $configTab->id_parent = $mainTab->id;
         $configTab->module = $this->name;
-        // Ajout du nom de route pour le contrôleur Config
+        // Exemple d'icône pour Config
+        $configTab->icon = 'settings';
         $configTab->route_name = 'admin_appointmentmanager_config';
         if (!$configTab->add()) {
             return false;
@@ -123,13 +126,14 @@ class AppointmentManager extends Module
         }
         $customerListTab->id_parent = $mainTab->id;
         $customerListTab->module = $this->name;
-        // Ajout du nom de route pour le contrôleur CustomerList
+        // Exemple d'icône pour CustomerList
+        $customerListTab->icon = 'description';
         $customerListTab->route_name = 'admin_appointmentmanager_customerlist';
         if (!$customerListTab->add()) {
             return false;
         }
         return true;
-    }    
+    }
     protected function uninstallTabs()
     {
         $tabs = array('AdminAppointmentManager', 'AdminAppointmentManagerConfig', 'AdminAppointmentManagerCustomerList');
