@@ -64,10 +64,10 @@ class AppointmentManager extends Module
         if (!file_exists($sql_file)) {
             return false;
         }
-        // Lecture du contenu du fichier SQL en utilisant Tools::file_get_contents()
+        // Utiliser Tools::file_get_contents() pour lire le fichier SQL
         $sql_content = Tools::file_get_contents($sql_file);
         $sql_content = str_replace('Prefix_', _DB_PREFIX_, $sql_content);
-        // Séparation des requêtes par point-virgule
+        // Séparer les requêtes à chaque point-virgule
         $sql_queries = array_filter(array_map('trim', explode(';', $sql_content)));
         foreach ($sql_queries as $query) {
             if (!empty($query)) {
@@ -92,7 +92,8 @@ class AppointmentManager extends Module
         foreach (Language::getLanguages(true) as $lang) {
             $mainTab->name[$lang['id_lang']] = 'AppointmentManager';
         }
-        $mainTab->id_parent = 0;
+        // Placer le module sous le parent des modules Symfony :
+        $mainTab->id_parent = Tab::getIdFromClassName('AdminParentModulesSf');
         $mainTab->module = $this->name;
         if (!$mainTab->add()) {
             return false;
@@ -152,7 +153,7 @@ class AppointmentManager extends Module
                 $output .= $this->displayError($this->l('Reset cancelled.'));
             }
         }
-        return $output.$this->display(__FILE__, 'views/templates/admin/config_page.tpl');
+        Tools::redirectAdmin($this->context->link->getAdminLink('AdminAppointmentManagerConfig'));
     }
     public function hookDisplayHome($params)
     {
