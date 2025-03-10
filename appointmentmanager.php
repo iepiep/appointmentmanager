@@ -14,6 +14,8 @@ if (!defined('_PS_VERSION_')) {
 class AppointmentManager extends Module
 {
 
+    public $ps_versions_compliancy = array('min' => '8.0.0', 'max' => _PS_VERSION_);
+
     public function __construct()
     {
         $this->name = 'appointmentmanager';
