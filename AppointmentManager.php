@@ -77,7 +77,7 @@ class AppointmentManager extends Module
             }
         }
         return true;
-    }    
+    }     
     protected function uninstallDB()
     {
         $sql = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'appointment_manager`';
