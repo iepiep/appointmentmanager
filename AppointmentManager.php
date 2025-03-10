@@ -148,7 +148,7 @@ class AppointmentManager extends Module
     {
         $this->context->smarty->assign(array(
             'appointment_message' => 'Prenez rendez-vous pour votre diagnostic immobilier',
-            'appointment_link' => $this->context->link->getModuleLink($this->name, 'appointmentform')
+            'appointment_link' => $this->context->link->getModuleLink($this->name, 'appointmentmoduleform')
         ));
         return $this->display(__FILE__, 'views/templates/front/appointment_block.tpl');
     }
