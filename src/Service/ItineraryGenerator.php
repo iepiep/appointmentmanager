@@ -23,11 +23,10 @@ class ItineraryGenerator
     protected array $appointments;
     protected array $config;
 
-
     public function __construct(
         private LoggerInterface  $logger // Use the correct interface
-    ){}
-
+    ) {
+    }
 
     public function generateItinerary(array $home, array $appointments, array $config): array
     {
@@ -58,7 +57,7 @@ class ItineraryGenerator
                     'lng' => $coords['lng'],
                 ];
             } else {
-                 $this->logger->warning('Failed to geocode address: ' . $appt['address'] . ' for appointment ID: ' . $appt['id_appointment_manager'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger, include ID
+                $this->logger->warning('Failed to geocode address: ' . $appt['address'] . ' for appointment ID: ' . $appt['id_appointment_manager'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger, include ID
                 // Don't add to points if geocoding fails
             }
         }
@@ -89,7 +88,7 @@ class ItineraryGenerator
     protected function tspNearestNeighbor(array $start, array $points): array
     {
         // ... (rest of your tspNearestNeighbor method remains the same) ...
-          $route = [];
+        $route = [];
         $current = $start;
         $remaining = $points;
 
@@ -109,9 +108,9 @@ class ItineraryGenerator
 
             // Add the nearest point to the route and remove it from the remaining points.
             if ($nearest !== null) { // Check for null before proceeding
-              $route[] = $nearest;
-              $current = $nearest;
-              array_splice($remaining, $index, 1);
+                $route[] = $nearest;
+                $current = $nearest;
+                array_splice($remaining, $index, 1);
             } else {
                 // Handle the case where $nearest is null (should not happen in a typical TSP)
                 $this->logger->error('Nearest neighbor not found.', ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
@@ -155,7 +154,7 @@ class ItineraryGenerator
     protected function distance(array $a, array $b): float
     {
         // ... (Haversine formula remains the same) ...
-         // Haversine formula (accurate for geographic coordinates)
+        // Haversine formula (accurate for geographic coordinates)
         $earthRadius = 6371; // Radius of the earth in km
 
         $latFrom = deg2rad($a['lat']);
@@ -179,7 +178,7 @@ class ItineraryGenerator
 
         // Handle geocoding failure
         if (!$homeCoords) {
-           $this->logger->error('Failed to geocode home address for route distance calculation: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
+            $this->logger->error('Failed to geocode home address for route distance calculation: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
             return PHP_FLOAT_MAX; // Return a very large distance
         }
         $prev = ['lat' => $homeCoords['lat'], 'lng' => $homeCoords['lng']]; // Start from home
@@ -205,7 +204,7 @@ class ItineraryGenerator
         // Get home coordinates
         $homeCoords = $this->geocodeAddress($this->home['address'] . ', ' . $this->home['postal_code'] . ' ' . $this->home['city']);
         if (!$homeCoords) {
-             $this->logger->error('Failed to geocode home address in calculateTimetable: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
+            $this->logger->error('Failed to geocode home address in calculateTimetable: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
             return [];
         }
 
@@ -214,7 +213,7 @@ class ItineraryGenerator
         foreach ($route as $point) {
             // Travel Time using Google Maps Distance Matrix API
             $travelTime = $this->getTravelTime($prevPoint, $point);
-            if($travelTime === null) {
+            if ($travelTime === null) {
                 // If travel time cannot be calculated, skip this appointment.  It's
                 // better to skip one than to have the whole itinerary fail.
                 $this->logger->error('Failed to get travel time. Skipping appointment.', ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
@@ -265,7 +264,7 @@ class ItineraryGenerator
 
     protected function geocodeAddress(string $address): ?array
     {
-       // ... (geocodeAddress method with cURL and error handling) ...
+        // ... (geocodeAddress method with cURL and error handling) ...
         $apiKey = $this->config['google_api_key'];
         $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address) . '&key=' . $apiKey;
 
@@ -291,7 +290,7 @@ class ItineraryGenerator
                 'lng' => $data['results'][0]['geometry']['location']['lng'],
             ];
         } else {
-             $this->logger->error("Geocoding error for address: $address - Response: " . print_r($data, true), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger and include response
+            $this->logger->error("Geocoding error for address: $address - Response: " . print_r($data, true), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger and include response
             return null;
         }
     }
@@ -312,7 +311,7 @@ class ItineraryGenerator
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-           $this->logger->error('cURL error in getTravelTime: ' . curl_error($ch), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger
+            $this->logger->error('cURL error in getTravelTime: ' . curl_error($ch), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger
             curl_close($ch);
             return null; // Return null on error.
         }
@@ -325,7 +324,7 @@ class ItineraryGenerator
             $durationInSeconds = $data['rows'][0]['elements'][0]['duration']['value'];
             return (int)round($durationInSeconds / 60); // Convert seconds to minutes
         } else {
-             $this->logger->error("Distance Matrix API error - Response: " . print_r($data, true), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Log full response
+            $this->logger->error("Distance Matrix API error - Response: " . print_r($data, true), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Log full response
             return null; // Return null on API error
         }
     }
