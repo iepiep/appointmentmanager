@@ -34,7 +34,7 @@ class AppointmentManager extends Module
     public function install()
     {
         if (!parent::install() ||
-            $this->registerServices(); ||
+            $this->registerServices() ||
             !$this->installDB() ||
             !$this->installTabs() ||
             !$this->registerHook('displayHome') ||
