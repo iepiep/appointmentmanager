@@ -31,10 +31,10 @@ class AppointmentManager extends Module
     }
     public function install()
     {
-        if (!parent::install() &&
-            !$this->installDB() &&
-            !$this->installTabs() &&
-            !$this->registerHook('displayHome') &&
+        if (!parent::install() ||
+            !$this->installDB() ||
+            !$this->installTabs() ||
+            !$this->registerHook('displayHome') ||
             !$this->registerHook('displayBanner')
         ) {
             return false;
@@ -51,8 +51,8 @@ class AppointmentManager extends Module
     }
     public function uninstall()
     {
-        if (!parent::uninstall() &&
-            !$this->uninstallDB() &&
+        if (!parent::uninstall() ||
+            !$this->uninstallDB() ||
             !$this->uninstallTabs()
         ) {
             return false;
