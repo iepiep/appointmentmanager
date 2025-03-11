@@ -16,7 +16,7 @@ if (!defined('_PS_VERSION_')) {
 
 // Corrected interface
 use PrestaShop\PrestaShop\Core\Logger\LoggerInterface;
-use PrestaShopLogger;  // Keep for specific PrestaShop logging
+use Symfony\Component\Logger\LoggerInterface; // Use the correct interface
 
 class ItineraryGenerator
 {
