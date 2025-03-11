@@ -15,7 +15,8 @@ if (!defined('_PS_VERSION_')) {
 }
 
 // Corrected interface
-use Symfony\Component\Logger\LoggerInterface; // Use the correct interface
+use Symfony\Component\Logger\LoggerInterface;
+
 
 class ItineraryGenerator
 {
@@ -25,7 +26,7 @@ class ItineraryGenerator
 
 
     public function __construct(
-        private LoggerInterface $logger // Use the correct interface
+        private LoggerInterface  $logger // Use the correct interface
     ){}
 
 
