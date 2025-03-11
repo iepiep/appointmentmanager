@@ -6,5 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AppointmentManager\\Controller\\Admin\\ConfigController' => $baseDir . '/src/Controller/Admin/ConfigController.php',
+    'AppointmentManager\\Controller\\Admin\\CustomerListController' => $baseDir . '/src/Controller/Admin/CustomerListController.php',
+    'AppointmentManager\\Controller\\Admin\\ItineraryMapController' => $baseDir . '/src/Controller/Admin/ItineraryMapController.php',
+    'AppointmentManager\\Form\\ConfigType' => $baseDir . '/src/Form/ConfigType.php',
+    'AppointmentManager\\Service\\ItineraryGenerator' => $baseDir . '/src/Service/ItineraryGenerator.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

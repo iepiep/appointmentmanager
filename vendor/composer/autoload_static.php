@@ -9,16 +9,11 @@ class ComposerStaticInitcf1c04285ea9589934cfe6efc5c92299
     public static $prefixLengthsPsr4 = array (
         'A' => 
         array (
-            'AppointmentManager\\Classes\\' => 27,
             'AppointmentManager\\' => 19,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'AppointmentManager\\Classes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/classes',
-        ),
         'AppointmentManager\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -26,6 +21,11 @@ class ComposerStaticInitcf1c04285ea9589934cfe6efc5c92299
     );
 
     public static $classMap = array (
+        'AppointmentManager\\Controller\\Admin\\ConfigController' => __DIR__ . '/../..' . '/src/Controller/Admin/ConfigController.php',
+        'AppointmentManager\\Controller\\Admin\\CustomerListController' => __DIR__ . '/../..' . '/src/Controller/Admin/CustomerListController.php',
+        'AppointmentManager\\Controller\\Admin\\ItineraryMapController' => __DIR__ . '/../..' . '/src/Controller/Admin/ItineraryMapController.php',
+        'AppointmentManager\\Form\\ConfigType' => __DIR__ . '/../..' . '/src/Form/ConfigType.php',
+        'AppointmentManager\\Service\\ItineraryGenerator' => __DIR__ . '/../..' . '/src/Service/ItineraryGenerator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 

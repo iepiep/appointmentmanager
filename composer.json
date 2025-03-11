@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AppointmentManager\\": "src/",
+            "AppointmentManager\\": "src/"
         }
     },
     "config": {

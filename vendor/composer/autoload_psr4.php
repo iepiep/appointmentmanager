@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'AppointmentManager\\Classes\\' => array($baseDir . '/classes'),
     'AppointmentManager\\' => array($baseDir . '/src'),
 );
