@@ -8,9 +8,9 @@
  * License: MIT License
  */
 
- namespace AppointmentManager\Controller\Admin;
+namespace AppointmentManager\Controller\Admin;
 
- if (!defined('_PS_VERSION_')) {
+if (!defined('_PS_VERSION_')) {
     exit;
 }
 

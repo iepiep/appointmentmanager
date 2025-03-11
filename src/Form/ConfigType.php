@@ -8,9 +8,9 @@
  * License: MIT License
  */
 
- namespace AppointmentManager\Form;
+namespace AppointmentManager\Form;
 
- if (!defined('_PS_VERSION_')) {
+if (!defined('_PS_VERSION_')) {
     exit;
 }
 
