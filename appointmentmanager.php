@@ -100,7 +100,12 @@ class AppointmentManager extends Module
     protected function uninstallDB()
     {
         $sql = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'appointment_manager`';
-        return Db::getInstance()->execute($sql);
+        $result = Db::getInstance()->execute($sql);
+        if (!$result) {
+            // Ajouter un log ou un message d'erreur pour aider au débogage
+            PrestaShopLogger::addLog('Erreur lors de la suppression de la table appointment_manager: ' . Db::getInstance()->getMsgError(), 3);
+        }
+        return $result;
     }
     protected function installTabs()
     {
@@ -141,29 +146,13 @@ class AppointmentManager extends Module
         $customerListTab->class_name = 'AdminAppointmentManagerCustomerList';
         $customerListTab->module = $this->name;
         $customerListTab->id_parent = (int)$mainTab->id;
-        $customerListTab->route_name = 'admin_appointmentmanager_customerlist';
+        $customerListTab->route_name = 'admin_appointmentmanager_customer_list';
         $customerListTab->icon = 'description';
         $customerListTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $customerListTab->name[$lang['id_lang']] = $this->trans('Customer List', [], 'Modules.Appointmentmanager.Admin');
         }
         if (!$customerListTab->add()) {
-            return false;
-        }
-
-        // Itinerary Map Tab
-        $itineraryMapTab = new Tab();
-        $itineraryMapTab->active = 1;
-        $itineraryMapTab->class_name = 'AdminAppointmentManagerItineraryMap';
-        $itineraryMapTab->module = $this->name;
-        $itineraryMapTab->id_parent = (int)$mainTab->id;
-        $itineraryMapTab->route_name = 'admin_appointmentmanager_itinerarymap';
-        $itineraryMapTab->icon = 'map';
-        $itineraryMapTab->name = [];
-        foreach (Language::getLanguages(true) as $lang) {
-            $itineraryMapTab->name[$lang['id_lang']] = $this->trans('Itinerary Map', [], 'Modules.Appointmentmanager.Admin');
-        }
-        if (!$itineraryMapTab->add()) {
             return false;
         }
 
