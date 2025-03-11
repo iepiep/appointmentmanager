@@ -81,7 +81,7 @@ class AppointmentManager extends Module
 
         try {
             foreach ($sql_queries as $query) {
-                if (!empty($query)) {
+                if (trim($query) != '') {
                     if (!Db::getInstance()->execute($query)) {
                         throw new PrestaShopDatabaseException('Error executing query: ' . $query); // More informative error
                     }
