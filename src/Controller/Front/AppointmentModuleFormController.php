@@ -18,6 +18,10 @@ use ModuleFrontController;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface; // For rendering widgets if needed
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
+use Validate;
+use Db;
+use PrestaShopDatabaseException;
+use PrestaShopLogger;
 
 class AppointmentModuleFormController extends ModuleFrontController
 {
