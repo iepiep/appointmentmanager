@@ -15,8 +15,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 // Corrected interface
-use Symfony\Component\Logger\LoggerInterface;
-
+use Psr\Log\LoggerInterface;
 
 class ItineraryGenerator
 {
