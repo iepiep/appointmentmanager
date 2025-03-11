@@ -146,7 +146,7 @@ class AppointmentManager extends Module
         $mainTab->active = 1;
         $mainTab->class_name = 'AdminAppointmentManager';
         $mainTab->module = $this->name;
-        $mainTab->id_parent = 'AdminDashboard';
+        $mainTab->id_parent = Tab::getIdFromClassName('AdminDashboard');
         $mainTab->icon = 'local_shipping';
         $mainTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
