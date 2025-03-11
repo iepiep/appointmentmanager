@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/appointmentmanager/appointmentmanager.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="module_description">
+        <source>Manage appointments easily.</source>
+        <target>Manage appointments easily.</target>
+      </trans-unit>
+      <trans-unit id="module_name">
+        <source>Appointment Manager</source>
+        <target>Appointment Manager</target>
+      </trans-unit>
+      <trans-unit id="config_tab_name">
+        <source>Config</source>
+        <target>Config</target>
+      </trans-unit>
+      <trans-unit id="customer_list_tab_name">
+        <source>CustomerList</source>
+        <target>CustomerList</target>
+      </trans-unit>
+      <trans-unit id="confirm_uninstall">
+        <source>Are you sure you want to uninstall?</source>
+        <target>Are you sure you want to uninstall?</target>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/appointmentmanager/controllers/admin/AdminAppointmentManagerConfigController.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="config_page_text">
+        <source>This is the configuration page for Appointment Manager.</source>
+        <target>This is the configuration page for Appointment Manager.</target>
+      </trans-unit>
+      <trans-unit id="config_page_title">
+        <source>Configuration Page</source>
+        <target>Configuration Page</target>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/appointmentmanager/controllers/admin/AdminAppointmentManagerCustomerListController.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="customer_list_page_text">
+        <source>This is the customer list page for Appointment Manager.</source>
+        <target>This is the customer list page for Appointment Manager.</target>
+      </trans-unit>
+      <trans-unit id="customer_list_page_title">
+        <source>Customer List Page</source>
+        <target>Customer List Page</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/appointmentmanager/appointmentmanager.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="module_description">
+        <source>Manage appointments easily.</source>
+        <target>Gérez les rendez-vous facilement.</target>
+      </trans-unit>
+      <trans-unit id="module_name">
+        <source>Appointment Manager</source>
+        <target>Gestionnaire de Rendez-vous</target>
+      </trans-unit>
+      <trans-unit id="config_tab_name">
+        <source>Config</source>
+        <target>Config</target>
+      </trans-unit>
+      <trans-unit id="customer_list_tab_name">
+        <source>CustomerList</source>
+        <target>Liste Clients</target>
+      </trans-unit>
+      <trans-unit id="confirm_uninstall">
+        <source>Are you sure you want to uninstall?</source>
+        <target>Êtes-vous sûr de vouloir désinstaller ?</target>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/appointmentmanager/controllers/admin/AdminAppointmentManagerConfigController.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="config_page_text">
+        <source>This is the configuration page for Appointment Manager.</source>
+        <target>Ceci est la page de configuration pour Gestionnaire de Rendez-vous.</target>
+      </trans-unit>
+      <trans-unit id="config_page_title">
+        <source>Configuration Page</source>
+        <target>Page de Configuration</target>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/appointmentmanager/controllers/admin/AdminAppointmentManagerCustomerListController.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="customer_list_page_text">
+        <source>This is the customer list page for Appointment Manager.</source>
+        <target>Ceci est la page de liste des clients pour Gestionnaire de Rendez-vous.</target>
+      </trans-unit>
+      <trans-unit id="customer_list_page_title">
+        <source>Customer List Page</source>
+        <target>Page Liste Clients</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
