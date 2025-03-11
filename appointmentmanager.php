@@ -11,6 +11,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 class AppointmentManager extends Module
@@ -32,6 +34,7 @@ class AppointmentManager extends Module
     public function install()
     {
         if (!parent::install() ||
+            $this->registerServices(); ||
             !$this->installDB() ||
             !$this->installTabs() ||
             !$this->registerHook('displayHome') ||
@@ -58,6 +61,14 @@ class AppointmentManager extends Module
         Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH');
         Configuration::deleteByName('APPOINTMENTMANAGER_BREAK_LENGTH');
         return true;
+    }
+    private function registerServices()
+    {
+        $container = new ContainerBuilder();
+        $loader = new \Symfony\Component\DependencyInjection\Loader\YamlFileLoader($container, new \Symfony\Component\Config\FileLocator(__DIR__ . '/config'));
+        $loader->load('services.yml');
+
+        $container->compile();
     }
     protected function installDB()
     {

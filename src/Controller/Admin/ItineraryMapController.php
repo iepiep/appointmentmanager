@@ -16,7 +16,8 @@ if (!defined('_PS_VERSION_')) {
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
-use AppointmentManager\Classes\ItineraryGenerator;
+use AppointmentManager\Service\ItineraryGenerator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use PrestaShopLogger; // Import PrestaShopLogger
 
 class ItineraryMapController extends FrameworkBundleAdminController
@@ -64,8 +65,8 @@ class ItineraryMapController extends FrameworkBundleAdminController
         }
 
         // Generate the itinerary
-        $generator = new ItineraryGenerator($homePlace, $appointments, $config);
-        $itinerary = $generator->generateItinerary();
+        $itineraryGenerator = $this->get('appointmentmanager.itinerary_generator');
+        $itinerary = $itineraryGenerator->generateItinerary();
 
           // Check if itinerary generation was successful
         if (empty($itinerary)) {

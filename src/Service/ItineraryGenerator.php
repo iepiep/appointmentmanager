@@ -8,7 +8,7 @@
  * License: MIT License
  */
 
-namespace AppointmentManager\Classes;
+namespace AppointmentManager\Service;
 
 if (!defined('_PS_VERSION_')) {
     exit;
