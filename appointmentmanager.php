@@ -3,7 +3,7 @@
  * @author Roberto Minini <r.minini@solution61.fr>
  * @copyright 2025 Roberto Minini
  * @license MIT
- * 65464665465465
+ *
  * This file is part of the AppointmentManager Module
  * License: MIT License
  */
