@@ -1,25 +1,10 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+
 {% block content %}
-<div class="panel">
-    <h3>Appointment Manager - Configuration</h3>
-    {{ form_start(form) }}
-        <div class="form-group">
-            {{ form_label(form.google_api_key) }}
-            {{ form_widget(form.google_api_key, {'attr': {'class': 'form-control'}}) }}
+    <div class="card">
+        <div class="card-block">
+            <h4 class="card-title">{{ 'Configuration Page'|trans({}, 'Modules.Appointmentmanager.Admin') }}</h4>
+            <p class="alert alert-info">{{ text_config }}</p>
         </div>
-        <div class="form-group">
-            {{ form_label(form.start_time) }}
-            {{ form_widget(form.start_time, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-group">
-            {{ form_label(form.appointment_length) }}
-            {{ form_widget(form.appointment_length, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-group">
-            {{ form_label(form.break_length) }}
-            {{ form_widget(form.break_length, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-    {{ form_end(form) }}
-</div>
+    </div>
 {% endblock %}

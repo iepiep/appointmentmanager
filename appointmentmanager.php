@@ -7,259 +7,254 @@
  * This file is part of the AppointmentManager Module
  * License: MIT License
  */
+
+declare(strict_types=1);
+
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
-
-class AppointmentManager extends Module
+class AppointmentManager extends Module implements WidgetInterface
 {
     public function __construct()
     {
         $this->name = 'appointmentmanager';
-        $this->tab = 'shipping_logistics';
+        $this->tab = 'administration'; // Onglet dans lequel le module sera listé (peut être changé)
         $this->version = '1.0.0';
         $this->author = 'Roberto Minini';
-        $this->need_instance = 0;
-        $this->bootstrap = true;
+        $this->need_instance = 0; // Pas besoin d'instance pour ce module simple
+        $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => _PS_VERSION_];
+        $this->bootstrap = true; // Utilisation de Bootstrap de PrestaShop
+
         parent::__construct();
-        $this->displayName = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin');
-        $this->description = $this->trans('Module to manage appointments.', [], 'Modules.Appointmentmanager.Admin');
-        $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => _PS_VERSION_ ];
-        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', [], 'Modules.Appointmentmanager.Admin');
+
+        $this->displayName = $this->l('Appointment Manager', 'Modules.Appointmentmanager.Admin');
+        $this->description = $this->l('Manage appointments easily.', 'Modules.Appointmentmanager.Admin');
+
+        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?', 'Modules.Appointmentmanager.Admin');
+
+        if (!Configuration::get('APPOINTMENTMANAGER_NAME')) { // Exemple, peut être supprimé si pas de config
+            $this->warning = $this->l('No name provided', 'Modules.Appointmentmanager.Admin');
+        }
+
+        $this->author_address = 'iepiep74@gmail.com'; // Pour la licence, visible dans le BO
+        $this->module_key = 'your_module_key'; // Clef du module pour le PrestaShop Addons (si distribution)
     }
-    public function install()
+
+    /**
+     * @return bool
+     */
+    public function install(): bool
     {
-        PrestaShopLogger::addLog('AppointmentManager: Starting install process...', 1, null, 'AppointmentManager'); // <--- LOG 1
-    
-        if (!parent::install()) { // <--- SUSPECT POINT: parent::install()
-            PrestaShopLogger::addLog('AppointmentManager: parent::install() failed IMMEDIATELY.', 3, null, 'AppointmentManager'); // <--- LOG 2
-            return false;
-        }
-        PrestaShopLogger::addLog('AppointmentManager: parent::install() successful.', 1, null, 'AppointmentManager'); // <--- LOG 3
-
-        if (!$this->installDB()) {
-            PrestaShopLogger::addLog('AppointmentManager: installDB() failed.', 3, null, 'AppointmentManager');
-            return false;
-        }
-        PrestaShopLogger::addLog('AppointmentManager: installDB() successful.', 1, null, 'AppointmentManager');
-
-        if (!$this->installTabs()) {
-            PrestaShopLogger::addLog('AppointmentManager: installTabs() failed.', 3, null, 'AppointmentManager');
-            return false;
-        }
-        PrestaShopLogger::addLog('AppointmentManager: installTabs() successful.', 1, null, 'AppointmentManager');
-
-
-        if (!$this->registerHook('displayHome')) {
-            PrestaShopLogger::addLog('AppointmentManager: registerHook(displayHome) failed.', 3, null, 'AppointmentManager');
-            return false;
-        }
-        PrestaShopLogger::addLog('AppointmentManager: registerHook(displayHome) successful.', 1, null, 'AppointmentManager');
-
-
-        if (!$this->registerHook('displayBanner')) {
-            PrestaShopLogger::addLog('AppointmentManager: registerHook(displayBanner) failed.', 3, null, 'AppointmentManager');
-            return false;
-        }
-        PrestaShopLogger::addLog('AppointmentManager: registerHook(displayBanner) successful.', 1, null, 'AppointmentManager');
-
-
-        Configuration::updateValue('APPOINTMENTMANAGER_GOOGLE_API_KEY', '');
-        Configuration::updateValue('APPOINTMENTMANAGER_START_TIME', '08:30');
-        Configuration::updateValue('APPOINTMENTMANAGER_APPOINTMENT_LENGTH', 120);
-        Configuration::updateValue('APPOINTMENTMANAGER_BREAK_LENGTH', 60);
-        Configuration::updateValue('APPOINTMENTMANAGER_HOME_ADDRESS', '');
-        Configuration::updateValue('APPOINTMENTMANAGER_HOME_POSTAL_CODE', '');
-        Configuration::updateValue('APPOINTMENTMANAGER_HOME_CITY', '');
-
-        PrestaShopLogger::addLog('AppointmentManager: Installation process completed.', 1, null, 'AppointmentManager');
-        return true;
-    }
-    public function uninstall()
-    {
-        if (!parent::uninstall() ||
-            !$this->uninstallDB() ||
-            !$this->uninstallTabs()
+        if (parent::install() &&
+            $this->installTab()
         ) {
-            return false;
-        }
-        Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY');
-        Configuration::deleteByName('APPOINTMENTMANAGER_START_TIME');
-        Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH');
-        Configuration::deleteByName('APPOINTMENTMANAGER_BREAK_LENGTH');
-        Configuration::deleteByName('APPOINTMENTMANAGER_HOME_ADDRESS');
-        Configuration::deleteByName('APPOINTMENTMANAGER_HOME_POSTAL_CODE');
-        Configuration::deleteByName('APPOINTMENTMANAGER_HOME_CITY');
-        return true;
-    }
-    protected function installDB()
-    {
-        $sql_file = dirname(__FILE__).'/src/sql/install.sql';
-        if (!file_exists($sql_file)) {
-            $error_message = 'SQL installation file not found: ' . $sql_file;
-            PrestaShopLogger::addLog('AppointmentManager: installDB() - ' . $error_message, 3, null, 'AppointmentManager');
-            $this->context->controller->errors[] = $this->trans($error_message, [], 'Modules.Appointmentmanager.Admin');
-            return false;
-        }
-
-        $sql_content = Tools::file_get_contents($sql_file);
-        $sql_content = str_replace('Prefix_', _DB_PREFIX_, $sql_content);
-        $sql_queries = array_filter(array_map('trim', explode(';', $sql_content)));
-
-        Db::getInstance()->execute('START TRANSACTION');
-
-        try {
-            foreach ($sql_queries as $query) {
-                if (trim($query) != '') {
-                    if (!Db::getInstance()->execute($query)) {
-                        $error_message = 'Error executing query: ' . $query . ' - Error Message: ' . Db::getInstance()->getMsgError();
-                        PrestaShopLogger::addLog('AppointmentManager: installDB() - ' . $error_message, 3, null, 'AppointmentManager');
-                        throw new PrestaShopDatabaseException($error_message);
-                    }
-                }
-            }
-            Db::getInstance()->execute('COMMIT');
             return true;
-
-        } catch (PrestaShopDatabaseException $e) {
-            Db::getInstance()->execute('ROLLBACK');
-            PrestaShopLogger::addLog('AppointmentManager: installDB() - Database error: ' . $e->getMessage(), 3, null, 'AppointmentManager');
-            $this->context->controller->errors[] = $e->getMessage();
-            return false;
         }
+
+        return false;
     }
-    protected function uninstallDB()
+
+    /**
+     * @return bool
+     */
+    public function uninstall(): bool
     {
-        $sql = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'appointment_manager`';
-        $result = Db::getInstance()->execute($sql);
-        if (!$result) {
-            PrestaShopLogger::addLog('AppointmentManager: uninstallDB() - Error dropping table appointment_manager: ' . Db::getInstance()->getMsgError(), 3);
+        if (parent::uninstall() &&
+            $this->uninstallTab()
+        ) {
+            return true;
         }
-        return $result;
+
+        return false;
     }
-    protected function installTabs()
+
+    /**
+     * Installation des tabs dans le menu admin
+     *
+     * @return bool
+     */
+    public function installTab(): bool
     {
-        // Main Tab
-        $mainTab = new Tab();
-        $mainTab->active = 1;
-        $mainTab->class_name = 'AdminAppointmentManager';
-        $mainTab->module = $this->name;
-        $mainTab->id_parent = Tab::getIdFromClassName('AdminDashboard');
-        $mainTab->icon = 'local_shipping';
-        $mainTab->name = [];
+        $tabParent = new Tab();
+        $tabParent->active = 1;
+        $tabParent->class_name = 'AppointmentManager'; // Class name, sans suffixe 'Controller'
+        $tabParent->name = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $mainTab->name[$lang['id_lang']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin');
+            $tabParent->name[$lang['id_lang']] = $this->l('Appointment Manager', 'Modules.Appointmentmanager.Admin'); // Nom du tab principal
         }
-        if (!$mainTab->add()) {
-            $error_message_main_tab = 'Error adding Main Tab: ' . implode(', ', $mainTab->getErrors());
-            PrestaShopLogger::addLog('AppointmentManager: installTabs() - ' . $error_message_main_tab, 3, null, 'AppointmentManager');
+        $tabParent->id_parent = 0; // Tab principal
+        $tabParent->module = $this->name;
+        if (!$tabParent->add()) {
             return false;
         }
-        PrestaShopLogger::addLog('AppointmentManager: installTabs() - Main Tab added successfully.', 1, null, 'AppointmentManager');
 
-
-        // Config Tab
-        $configTab = new Tab();
-        $configTab->active = 1;
-        $configTab->class_name = 'AdminAppointmentManagerConfig';
-        $configTab->module = $this->name;
-        $configTab->id_parent = (int)$mainTab->id; // Cast to int for safety
-        $configTab->route_name = 'admin_appointmentmanager_config';
-        $configTab->icon = 'settings';
-        $configTab->name = [];
+        $tabConfig = new Tab();
+        $tabConfig->active = 1;
+        $tabConfig->class_name = 'AdminAppointmentManagerConfig'; // Correspond au nom du controller
+        $tabConfig->name = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $configTab->name[$lang['id_lang']] = $this->trans('Config', [], 'Modules.Appointmentmanager.Admin');
+            $tabConfig->name[$lang['id_lang']] = $this->l('Config', 'Modules.Appointmentmanager.Admin'); // Nom du tab config
         }
-        if (!$configTab->add()) {
-            $error_message_config_tab = 'Error adding Config Tab: ' . implode(', ', $configTab->getErrors());
-            PrestaShopLogger::addLog('AppointmentManager: installTabs() - ' . $error_message_config_tab, 3, null, 'AppointmentManager');
+        $tabConfig->id_parent = (int)Tab::getIdFromClassName('AppointmentManager'); // Sous-tab de 'AppointmentManager'
+        $tabConfig->module = $this->name;
+        if (!$tabConfig->add()) {
             return false;
         }
-        PrestaShopLogger::addLog('AppointmentManager: installTabs() - Config Tab added successfully.', 1, null, 'AppointmentManager');
 
-
-        // Customer List Tab
-        $customerListTab = new Tab();
-        $customerListTab->active = 1;
-        $customerListTab->class_name = 'AdminAppointmentManagerCustomerList';
-        $customerListTab->module = $this->name;
-        $customerListTab->id_parent = (int)$mainTab->id;
-        $customerListTab->route_name = 'admin_appointmentmanager_customer_list';
-        $customerListTab->icon = 'description';
-        $customerListTab->name = [];
+        $tabCustomerList = new Tab();
+        $tabCustomerList->active = 1;
+        $tabCustomerList->class_name = 'AdminAppointmentManagerCustomerList'; // Correspond au nom du controller
+        $tabCustomerList->name = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $customerListTab->name[$lang['id_lang']] = $this->trans('Customer List', [], 'Modules.Appointmentmanager.Admin');
+            $tabCustomerList->name[$lang['id_lang']] = $this->l('CustomerList', 'Modules.Appointmentmanager.Admin'); // Nom du tab CustomerList
         }
-        if (!$customerListTab->add()) {
-            $error_message_customer_list_tab = 'Error adding Customer List Tab: ' . implode(', ', $customerListTab->getErrors());
-            PrestaShopLogger::addLog('AppointmentManager: installTabs() - ' . $error_message_customer_list_tab, 3, null, 'AppointmentManager');
+        $tabCustomerList->id_parent = (int)Tab::getIdFromClassName('AppointmentManager'); // Sous-tab de 'AppointmentManager'
+        $tabCustomerList->module = $this->name;
+        if (!$tabCustomerList->add()) {
             return false;
         }
-        PrestaShopLogger::addLog('AppointmentManager: installTabs() - Customer List Tab added successfully.', 1, null, 'AppointmentManager');
-
 
         return true;
     }
-    protected function uninstallTabs()
+
+    /**
+     * Suppression des tabs lors de la désinstallation
+     *
+     * @return bool
+     */
+    public function uninstallTab(): bool
     {
-        $tabs = array('AdminAppointmentManager', 'AdminAppointmentManagerConfig', 'AdminAppointmentManagerCustomerList', 'AdminAppointmentManagerItineraryMap');
-        foreach ($tabs as $className) {
-            $id_tab = (int)Tab::getIdFromClassName($className); // Cast to int
-            if ($id_tab) {
-                $tab = new Tab($id_tab);
-                if (!Validate::isLoadedObject($tab) || !$tab->delete()) { // Validate loaded object before delete
-                    return false;
-                }
+        $tabId = (int)Tab::getIdFromClassName('AdminAppointmentManagerConfig');
+        if ($tabId) {
+            $tab = new Tab($tabId);
+            if (!$tab->delete()) {
+                return false;
             }
         }
+
+        $tabId = (int)Tab::getIdFromClassName('AdminAppointmentManagerCustomerList');
+        if ($tabId) {
+            $tab = new Tab($tabId);
+            if (!$tab->delete()) {
+                return false;
+            }
+        }
+
+        $tabIdParent = (int)Tab::getIdFromClassName('AppointmentManager');
+        if ($tabIdParent) {
+            $tabParent = new Tab($tabIdParent);
+            if (!$tabParent->delete()) {
+                return false;
+            }
+        }
+
         return true;
     }
-    public function resetModule()
-    {
-        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'appointment_manager` WHERE istest=1');
-    }
+
+    /**
+     *  Fonction getContent (ancienne méthode, ici on utilise les controllers Symfony)
+     *  Elle n'est plus nécessaire pour les pages de configuration gérées par Symfony.
+     *  On pourrait la supprimer si on ne souhaite pas l'utiliser du tout.
+     *  Elle pourrait être utile pour afficher une configuration rapide si besoin, hors Symfony.
+     *
+     * @return string
+     */
+    /*
     public function getContent()
     {
-        if (Tools::isSubmit('submitAppointmentManagerReset')) {
-            if (!$this->isTokenValid()) {  // Add token check
-                $this->context->controller->errors[] = $this->trans('Invalid security token', [], 'Modules.Appointmentmanager.Admin');
-                return '';
-            }
+        $output = '';
 
-            // ...existing code...
-            if (Tools::getValue('confirm_reset') == '1') {
-                if ($this->resetModule()) {
-                    $this->context->controller->confirmations[] = $this->trans('Test data removed successfully.', [], 'Modules.Appointmentmanager.Admin');
-                } else {
-                    $this->context->controller->errors[] = $this->trans('An error occurred while removing test data.', [], 'Modules.Appointmentmanager.Admin');
-                }
+        if (Tools::isSubmit('submit'.$this->name)) {
+            $configValue = strval(Tools::getValue('APPOINTMENTMANAGER_NAME'));
+            if (!Validate::isGenericName($configValue)) {
+                $output = $this->displayError($this->l('Invalid Configuration value', 'Modules.Appointmentmanager.Admin'));
             } else {
-                $this->context->controller->warnings[] = $this->trans('Reset cancelled.', [], 'Modules.Appointmentmanager.Admin');
+                Configuration::updateValue('APPOINTMENTMANAGER_NAME', $configValue);
+                $output = $this->displayConfirmation($this->l('Settings updated', 'Modules.Appointmentmanager.Admin'));
             }
         }
-        return '';
-    }
-    private function isTokenValid()
-    {
-        return Tools::getAdminTokenLite('AdminModules') === Tools::getValue('_token');
-    }
-    private function _displayAppointmentBlock($params)
-    {
-        $this->context->smarty->assign(array(
-          'appointment_message' => $this->trans('Book an appointment for your property diagnosis', [], 'Modules.Appointmentmanager.Front'),
-          'appointment_link' => $this->context->link->getModuleLink($this->name, 'appointmentmoduleform') // Corrected controller name
-      ));
-        return $this->fetch('module:'.$this->name.'/views/templates/front/appointment_block.tpl');
-    }
-    public function hookDisplayHome($params)
-    {
-        return $this->_displayAppointmentBlock($params);
+
+        return $output.$this->displayForm();
     }
 
-    public function hookDisplayBanner($params)
+
+    public function displayForm()
     {
-        return $this->_displayAppointmentBlock($params);
+        // Init Fields form array
+        $fieldsForm[0]['form'] = [
+            'legend' => [
+                'title' => $this->l('Settings', 'Modules.Appointmentmanager.Admin'),
+            ],
+            'input' => [
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Configuration value', 'Modules.Appointmentmanager.Admin'),
+                    'name' => 'APPOINTMENTMANAGER_NAME',
+                    'size' => 20,
+                    'required' => true,
+                ],
+            ],
+            'submit' => [
+                'title' => $this->l('Save', 'Modules.Appointmentmanager.Admin'),
+                'class' => 'btn btn-default pull-right',
+                'name' => 'submit'.$this->name,
+            ],
+        ];
+
+        $helper = new HelperForm();
+
+        // Module, token and currentIndex
+        $helper->module = $this;
+        $helper->name_controller = $this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+        // Language
+        $helper->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
+        $helper->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
+
+        // Title and toolbar
+        $helper->title = $this->displayName;
+        $helper->show_toolbar = true;        // false -> remove toolbar
+        $helper->toolbar_scroll = true;      // yes - > Toolbar is always visible on the top of the screen.
+        $helper->submit_action = 'submit'.$this->name;
+        $helper->toolbar_btn = [
+            'save' => [
+                'desc' => $this->l('Save', 'Modules.Appointmentmanager.Admin'),
+                'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.
+                '&token='.Tools::getAdminTokenLite('AdminModules'),
+            ],
+            'back' => [
+                'href' => AdminController::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminModules'),
+                'desc' => $this->l('Back to list', 'Modules.Appointmentmanager.Admin'),
+            ],
+        ];
+
+        // Load current value
+        $helper->fields_value['APPOINTMENTMANAGER_NAME'] = Configuration::get('APPOINTMENTMANAGER_NAME');
+
+        return $helper->generateForm($fieldsForm);
+    }
+    */
+
+    public function renderWidget($hookName, array $params): string
+    {
+        // Exemple de widget, non utilisé ici pour les pages admin, mais pour le front office
+        // return $this->display(__FILE__, 'widget.tpl'); // Si on avait un template widget.tpl
+        return ''; // Module admin, pas de widget front dans cet exemple
+    }
+
+    public function getWidgetVariables($hookName, array $params): array
+    {
+        // Variables pour le widget, non utilisé ici
+        return [];
+    }
+
+    public function getTabClassNamePrefix(): string
+    {
+        return 'AppointmentManager'; // Préfixe pour les class_name des tabs (important pour PS 8+)
     }
 }
