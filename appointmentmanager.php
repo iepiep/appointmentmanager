@@ -189,8 +189,13 @@ class AppointmentManager extends Module
     }
     public function getContent()
     {
-
         if (Tools::isSubmit('submitAppointmentManagerReset')) {
+            if (!$this->isTokenValid()) {  // Add token check
+                $this->context->controller->errors[] = $this->trans('Invalid security token', [], 'Modules.Appointmentmanager.Admin');
+                return '';
+            }
+
+            // ...existing code...
             if (Tools::getValue('confirm_reset') == '1') {
                 if ($this->resetModule()) {
                     $this->context->controller->confirmations[] = $this->trans('Test data removed successfully.', [], 'Modules.Appointmentmanager.Admin');
@@ -198,11 +203,14 @@ class AppointmentManager extends Module
                     $this->context->controller->errors[] = $this->trans('An error occurred while removing test data.', [], 'Modules.Appointmentmanager.Admin');
                 }
             } else {
-                $this->context->controller->warnings[] = $this->trans('Reset cancelled.', [], 'Modules.Appointmentmanager.Admin'); // Correct use of warnings
+                $this->context->controller->warnings[] = $this->trans('Reset cancelled.', [], 'Modules.Appointmentmanager.Admin');
             }
         }
-        // No need to redirect, just return.  The tabs handle navigation.
-        return ''; // Return empty string to prevent default PS configuration page
+        return '';
+    }
+    private function isTokenValid()
+    {
+        return Tools::getAdminTokenLite('AdminModules') === Tools::getValue('_token');
     }
     private function _displayAppointmentBlock($params)
     {

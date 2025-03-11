@@ -19,7 +19,7 @@ use PrestaShop\PrestaShop\Core\Module\WidgetInterface; // For rendering widgets 
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 
-class AppointmentFormModuleFrontController extends ModuleFrontController
+class AppointmentModuleFormController extends ModuleFrontController
 {
     public function initContent()
     {

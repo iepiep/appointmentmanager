@@ -24,22 +24,35 @@ class ConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('google_api_key', TextType::class, array(
-                    'label'    => 'Google API Key',
-                    'required' => false
-                ))
-                ->add('start_time', TextType::class, array(
-                    'label'    => 'Start Time',
-                    'data'     => '08:30'
-                ))
-                ->add('appointment_length', IntegerType::class, array(
-                    'label'    => 'Appointment Length (minutes)',
-                    'data'     => 120
-                ))
-                ->add('break_length', IntegerType::class, array(
-                    'label'    => 'Break Length (minutes)',
-                    'data'     => 60
-                ));
+        $builder
+            ->add('google_api_key', TextType::class, [
+                'label' => 'Google API Key',
+                'required' => false
+            ])
+            ->add('start_time', TextType::class, [
+                'label' => 'Start Time',
+                'data' => '08:30'
+            ])
+            ->add('appointment_length', IntegerType::class, [
+                'label' => 'Appointment Length (minutes)',
+                'data' => 120
+            ])
+            ->add('break_length', IntegerType::class, [
+                'label' => 'Break Length (minutes)',
+                'data' => 60
+            ])
+            ->add('home_address', TextType::class, [  // Add missing home address fields
+                'label' => 'Home Address',
+                'required' => true
+            ])
+            ->add('home_postal_code', TextType::class, [
+                'label' => 'Home Postal Code',
+                'required' => true
+            ])
+            ->add('home_city', TextType::class, [
+                'label' => 'Home City',
+                'required' => true
+            ]);
     }
     public function configureOptions(OptionsResolver $resolver)
     {
