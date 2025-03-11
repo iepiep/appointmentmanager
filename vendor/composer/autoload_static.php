@@ -6,21 +6,21 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitcf1c04285ea9589934cfe6efc5c92299
 {
-    public static $prefixLengthsPsr4 = array (
-        'A' => 
-        array (
+    public static $prefixLengthsPsr4 = array(
+        'A' =>
+        array(
             'AppointmentManager\\' => 19,
         ),
     );
 
-    public static $prefixDirsPsr4 = array (
-        'AppointmentManager\\' => 
-        array (
+    public static $prefixDirsPsr4 = array(
+        'AppointmentManager\\' =>
+        array(
             0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
-    public static $classMap = array (
+    public static $classMap = array(
         'AppointmentManager\\Controller\\Admin\\ConfigController' => __DIR__ . '/../..' . '/src/Controller/Admin/ConfigController.php',
         'AppointmentManager\\Controller\\Admin\\CustomerListController' => __DIR__ . '/../..' . '/src/Controller/Admin/CustomerListController.php',
         'AppointmentManager\\Controller\\Admin\\ItineraryMapController' => __DIR__ . '/../..' . '/src/Controller/Admin/ItineraryMapController.php',

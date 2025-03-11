@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Roberto Minini <r.minini@solution61.fr>
  * @copyright 2025 Roberto Minini

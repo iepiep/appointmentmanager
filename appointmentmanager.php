@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Roberto Minini <r.minini@solution61.fr>
  * @copyright 2025 Roberto Minini
@@ -54,7 +55,7 @@ class AppointmentManager extends Module
 
         if (!$this->registerHook('displayHome')) {
             PrestaShopLogger::addLog('AppointmentManager: registerHook(displayHome) failed.', 3, null, 'AppointmentManager');
-             return false;
+            return false;
         }
         PrestaShopLogger::addLog('AppointmentManager: registerHook(displayHome) successful.', 1, null, 'AppointmentManager');
 

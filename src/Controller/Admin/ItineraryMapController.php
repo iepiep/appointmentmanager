@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Roberto Minini <r.minini@solution61.fr>
  * @copyright 2025 Roberto Minini
@@ -37,7 +38,7 @@ class ItineraryMapController extends FrameworkBundleAdminController
         $appointments = \Db::getInstance()->executeS($sql);
 
         if (!$appointments) {
-             $this->addFlash('error', $this->trans('No appointments found with the given IDs.', [], 'Modules.Appointmentmanager.Admin')); // Clearer error message
+            $this->addFlash('error', $this->trans('No appointments found with the given IDs.', [], 'Modules.Appointmentmanager.Admin')); // Clearer error message
             return $this->redirectToRoute('admin_appointmentmanager_customerlist');
         }
 
@@ -54,10 +55,11 @@ class ItineraryMapController extends FrameworkBundleAdminController
         // Check for Google API key
         if (empty($config['google_api_key'])) {
             $this->addFlash('error', $this->trans('Google API Key is not set. Please configure it in the module settings.', [], 'Modules.Appointmentmanager.Admin'));
-             return $this->redirectToRoute('admin_appointmentmanager_config'); // Redirect to config
+            return $this->redirectToRoute('admin_appointmentmanager_config'); // Redirect to config
         }
         // Check for Home Address
-        if (empty($config['home_address']) || empty($config['home_postal_code']) || empty($config['home_city'])) {            $this->addFlash('error', $this->trans('Home address is not set. Please configure it in the module settings.', [], 'Modules.Appointmentmanager.Admin'));
+        if (empty($config['home_address']) || empty($config['home_postal_code']) || empty($config['home_city'])) {
+            $this->addFlash('error', $this->trans('Home address is not set. Please configure it in the module settings.', [], 'Modules.Appointmentmanager.Admin'));
             return $this->redirectToRoute('admin_appointmentmanager_config');
         }
         // Format home address for the ItineraryGenerator
@@ -73,7 +75,7 @@ class ItineraryMapController extends FrameworkBundleAdminController
         try {
             $itinerary = $itineraryGenerator->generateItinerary($homeAddress, $appointments, $config);
         } catch (\Exception $e) {
-             $this->addFlash('error', $this->trans('An error occurred while generating the itinerary: %error%', ['%error%' => $e->getMessage()], 'Modules.Appointmentmanager.Admin'));
+            $this->addFlash('error', $this->trans('An error occurred while generating the itinerary: %error%', ['%error%' => $e->getMessage()], 'Modules.Appointmentmanager.Admin'));
             PrestaShopLogger::addLog('Itinerary generation error: ' . $e->getMessage(), 3); // Log detailed error
             return $this->redirectToRoute('admin_appointmentmanager_customerlist');
         }
