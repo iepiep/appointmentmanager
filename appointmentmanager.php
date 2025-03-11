@@ -31,13 +31,13 @@ class AppointmentManager extends Module
     }
     public function install()
     {
-        PrestaShopLogger::addLog('AppointmentManager: Starting install process...', 1, null, 'AppointmentManager');
-
-        if (!parent::install()) {
-            PrestaShopLogger::addLog('AppointmentManager: parent::install() failed.', 3, null, 'AppointmentManager');
+        PrestaShopLogger::addLog('AppointmentManager: Starting install process...', 1, null, 'AppointmentManager'); // <--- LOG 1
+    
+        if (!parent::install()) { // <--- SUSPECT POINT: parent::install()
+            PrestaShopLogger::addLog('AppointmentManager: parent::install() failed IMMEDIATELY.', 3, null, 'AppointmentManager'); // <--- LOG 2
             return false;
         }
-        PrestaShopLogger::addLog('AppointmentManager: parent::install() successful.', 1, null, 'AppointmentManager');
+        PrestaShopLogger::addLog('AppointmentManager: parent::install() successful.', 1, null, 'AppointmentManager'); // <--- LOG 3
 
         if (!$this->installDB()) {
             PrestaShopLogger::addLog('AppointmentManager: installDB() failed.', 3, null, 'AppointmentManager');
