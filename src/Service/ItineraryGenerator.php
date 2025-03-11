@@ -14,7 +14,9 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PrestaShopLogger;
+// Corrected interface
+use PrestaShop\PrestaShop\Core\Logger\LoggerInterface;
+use PrestaShopLogger;  // Keep for specific PrestaShop logging
 
 class ItineraryGenerator
 {
@@ -22,28 +24,29 @@ class ItineraryGenerator
     protected array $appointments;
     protected array $config;
 
+
     public function __construct(
-        private \PrestaShop\PrestaShop\Core\Localization\AddressFormatterInterface $addressFormatter, // added
-        private \PrestaShop\PrestaShop\Core\LoggerInterface $logger // corrected
+        private LoggerInterface $logger // Use the correct interface
     ){}
+
 
     public function generateItinerary(array $home, array $appointments, array $config): array
     {
-        $this->home = $home; // Set the home address
+        $this->home = $home;
         $this->appointments = $appointments;
         $this->config = $config;
-        
+
         $points = [];
 
         // Geocode home address (only once)
         $homeCoords = $this->geocodeAddress($this->home['address'] . ', ' . $this->home['postal_code'] . ' ' . $this->home['city']);
         if (!$homeCoords) {
-            PrestaShopLogger::addLog('Failed to geocode home address: ' . $this->home['address'], 3, null, 'ItineraryGenerator', 0, true); // Log error
-            return []; // Return an empty array, indicating failure
+            $this->logger->error('Failed to geocode home address: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger
+            return []; // Return empty array on failure
         }
 
         foreach ($this->appointments as $appt) {
-            // Geocode *each* appointment address
+            // Geocode each appointment address
             $coords = $this->geocodeAddress($appt['address'] . ', ' . $appt['postal_code'] . ' ' . $appt['city']);
             if ($coords) {
                 $points[] = [
@@ -52,19 +55,18 @@ class ItineraryGenerator
                     'address' => $appt['address'],
                     'postal_code' => $appt['postal_code'],
                     'city' => $appt['city'],
-                    'lat' => $coords['lat'],  // Use coordinates from geocoding
-                    'lng' => $coords['lng'],  // Use coordinates from geocoding
+                    'lat' => $coords['lat'],
+                    'lng' => $coords['lng'],
                 ];
             } else {
-                PrestaShopLogger::addLog('Failed to geocode address: ' . $appt['address'], 2, null, 'ItineraryGenerator', $appt['id_appointment_manager'], true); // Log with appointment ID
-                // Optionally, you could add a flag to indicate that this appointment
-                // should be excluded from the itinerary, or use a default location.
+                 $this->logger->warning('Failed to geocode address: ' . $appt['address'] . ' for appointment ID: ' . $appt['id_appointment_manager'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger, include ID
+                // Don't add to points if geocoding fails
             }
         }
 
-        if (empty($points)) { // Check that we have valid appointments
-            PrestaShopLogger::addLog('No valid appointments found after geocoding.', 2, null, 'ItineraryGenerator', 0, true);
-            return []; // No appointments, so return an empty array
+        if (empty($points)) {
+            $this->logger->warning('No valid appointments found after geocoding.', ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);  // Use Symfony logger
+            return []; // No valid appointments
         }
 
         $start = [
@@ -73,39 +75,50 @@ class ItineraryGenerator
             'address' => $this->home['address'],
             'postal_code' => $this->home['postal_code'],
             'city' => $this->home['city'],
-            'lat' => $homeCoords['lat'],  // Use geocoded home coordinates
-            'lng' => $homeCoords['lng'],  // Use geocoded home coordinates
+            'lat' => $homeCoords['lat'],
+            'lng' => $homeCoords['lng'],
         ];
+
 
         $route = $this->tspNearestNeighbor($start, $points);
         $route = $this->twoOptOptimization($route);
-        $itinerary = $this->calculateTimetable($route); // Calculate the timetable using travel times
+        $itinerary = $this->calculateTimetable($route);
+
         return $itinerary;
     }
 
     protected function tspNearestNeighbor(array $start, array $points): array
     {
-        $route = [];
+        // ... (rest of your tspNearestNeighbor method remains the same) ...
+          $route = [];
         $current = $start;
         $remaining = $points;
 
         while (!empty($remaining)) {
             $nearest = null;
-            $minDist = null;
+            $minDist = PHP_FLOAT_MAX; // Initialize with a very large number
             $index = null;
 
             foreach ($remaining as $i => $point) {
                 $dist = $this->distance($current, $point);
-                if (is_null($minDist) || $dist < $minDist) {
+                if ($dist < $minDist) { // Simplified comparison
                     $minDist = $dist;
                     $nearest = $point;
                     $index = $i;
                 }
             }
 
-            $route[] = $nearest;
-            $current = $nearest;
-            array_splice($remaining, $index, 1);
+            // Add the nearest point to the route and remove it from the remaining points.
+            if ($nearest !== null) { // Check for null before proceeding
+              $route[] = $nearest;
+              $current = $nearest;
+              array_splice($remaining, $index, 1);
+            } else {
+                // Handle the case where $nearest is null (should not happen in a typical TSP)
+                $this->logger->error('Nearest neighbor not found.', ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
+                break; // Exit the loop to prevent infinite looping.
+            }
+
         }
 
         return $route;
@@ -113,6 +126,7 @@ class ItineraryGenerator
 
     protected function twoOptOptimization(array $route): array
     {
+        // ... (rest of your twoOptOptimization method remains the same) ...
         $improved = true;
         $size = count($route);
 
@@ -128,6 +142,7 @@ class ItineraryGenerator
                         array_slice($newRoute, $j + 1)
                     );
 
+                    // Compare distances and update the route if the new route is shorter.
                     if ($this->routeDistance($newRoute) < $this->routeDistance($route)) {
                         $route = $newRoute;
                         $improved = true;
@@ -140,7 +155,8 @@ class ItineraryGenerator
 
     protected function distance(array $a, array $b): float
     {
-        // Haversine formula (accurate for geographic coordinates)
+        // ... (Haversine formula remains the same) ...
+         // Haversine formula (accurate for geographic coordinates)
         $earthRadius = 6371; // Radius of the earth in km
 
         $latFrom = deg2rad($a['lat']);
@@ -158,13 +174,14 @@ class ItineraryGenerator
 
     protected function routeDistance(array $route): float
     {
+        // ... (routeDistance calculation, including home, remains the same) ...
         $dist = 0;
         $homeCoords = $this->geocodeAddress($this->home['address'] . ', ' . $this->home['postal_code'] . ' ' . $this->home['city']);
 
-        // Handle geocoding failure (e.g., return a large distance, log an error)
+        // Handle geocoding failure
         if (!$homeCoords) {
-            PrestaShopLogger::addLog('Failed to geocode home address for route distance calculation: ' . $this->home['address'], 3);
-            return PHP_FLOAT_MAX; // Return a very large distance to make this route unlikely to be chosen
+           $this->logger->error('Failed to geocode home address for route distance calculation: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
+            return PHP_FLOAT_MAX; // Return a very large distance
         }
         $prev = ['lat' => $homeCoords['lat'], 'lng' => $homeCoords['lng']]; // Start from home
 
@@ -176,33 +193,39 @@ class ItineraryGenerator
 
         return $dist;
     }
-
     protected function calculateTimetable(array $route): array
     {
         $startTime = \DateTime::createFromFormat('H:i', $this->config['start_time']);
-        $appointmentLength = (int) $this->config['appointment_length'];
-        $breakLength = (int) $this->config['break_length'];
+        $appointmentLength = (int)$this->config['appointment_length'];
+        $breakLength = (int)$this->config['break_length'];
 
         $morning = [];
         $afternoon = [];
         $currentTime = clone $startTime;
 
-        // Get home coordinates for starting point
+        // Get home coordinates
         $homeCoords = $this->geocodeAddress($this->home['address'] . ', ' . $this->home['postal_code'] . ' ' . $this->home['city']);
         if (!$homeCoords) {
-            PrestaShopLogger::addLog('Failed to geocode home address in calculateTimetable: ' . $this->home['address'], 3);
-            return []; // or some other appropriate error handling.
+             $this->logger->error('Failed to geocode home address in calculateTimetable: ' . $this->home['address'], ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
+            return [];
         }
 
-        $prevPoint = ['lat' => $homeCoords['lat'], 'lng' => $homeCoords['lng']]; // Start from home.
+        $prevPoint = ['lat' => $homeCoords['lat'], 'lng' => $homeCoords['lng']]; // Start from home
 
         foreach ($route as $point) {
-            // Calculate Travel Time using Google Maps Distance Matrix API
+            // Travel Time using Google Maps Distance Matrix API
             $travelTime = $this->getTravelTime($prevPoint, $point);
+            if($travelTime === null) {
+                // If travel time cannot be calculated, skip this appointment.  It's
+                // better to skip one than to have the whole itinerary fail.
+                $this->logger->error('Failed to get travel time. Skipping appointment.', ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']);
+                continue;  // Skip to the next appointment
+            }
 
-            // Add travel time to the current time
+            // Add travel time
             $currentTime->modify('+' . $travelTime . ' minutes');
 
+            // Check if it's morning or afternoon and add to the appropriate array
             if ($currentTime < (clone $startTime)->setTime(12, 0)) {
                 $morning[] = [
                     'time' => $currentTime->format('H:i'),
@@ -219,14 +242,18 @@ class ItineraryGenerator
                 ];
             }
 
+            // Add appointment length
             $currentTime->modify('+' . $appointmentLength . ' minutes');
 
-            //  Check for lunch break and adjust.
+
             if ($currentTime->format('H:i') >= '12:00' && $currentTime->format('H:i') < '13:00') {
-                $currentTime->setTime(13, 0); // Correct time to 13.
+
+                $currentTime->setTime(13, 0, 0); // Correct time to 13:00:00
+                // Add breakLength *after* setting the time to 13:00:00
                 $currentTime->modify('+' . $breakLength . ' minutes');
             }
-            $prevPoint = $point; // Update the previous point for the next iteration
+
+            $prevPoint = $point;
         }
 
         return [
@@ -236,22 +263,22 @@ class ItineraryGenerator
         ];
     }
 
+
     protected function geocodeAddress(string $address): ?array
     {
+       // ... (geocodeAddress method with cURL and error handling) ...
         $apiKey = $this->config['google_api_key'];
-        // URL encode the address for the API request
         $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address) . '&key=' . $apiKey;
 
-        // Use cURL to make the API request
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //  Not recommended for production - better to configure CA properly
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($ch);
 
-        // Check for cURL errors
+
         if (curl_errno($ch)) {
-            PrestaShopLogger::addLog('cURL error in geocodeAddress: ' . curl_error($ch), 3);
+            $this->logger->error('cURL error in geocodeAddress: ' . curl_error($ch), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger
             curl_close($ch);
             return null;
         }
@@ -259,51 +286,48 @@ class ItineraryGenerator
 
         $data = json_decode($response, true);
 
-        // Check API response status
         if ($data && $data['status'] == 'OK' && isset($data['results'][0]['geometry']['location'])) {
             return [
                 'lat' => $data['results'][0]['geometry']['location']['lat'],
                 'lng' => $data['results'][0]['geometry']['location']['lng'],
             ];
         } else {
-            // Log detailed error information, including the full API response
-            PrestaShopLogger::addLog("Geocoding error for address: $address - Response: " . print_r($data, true), 3);
+             $this->logger->error("Geocoding error for address: $address - Response: " . print_r($data, true), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger and include response
             return null;
         }
     }
 
-    protected function getTravelTime(array $origin, array $destination): int
+    protected function getTravelTime(array $origin, array $destination): ?int
     {
+        // ... (getTravelTime method with cURL and error handling, return null on failure) ...
         $apiKey = $this->config['google_api_key'];
         $originStr = $origin['lat'] . ',' . $origin['lng'];
         $destinationStr = $destination['lat'] . ',' . $destination['lng'];
 
-        // Build the URL for the Distance Matrix API request
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . urlencode($originStr) . '&destinations=' . urlencode($destinationStr) . '&key=' . $apiKey . '&units=metric&mode=driving'; // Use driving mode and metric units
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  // Not recommended in production
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($ch);
 
-        // Check for cURL errors
         if (curl_errno($ch)) {
-            PrestaShopLogger::addLog('cURL error in getTravelTime: ' . curl_error($ch), 3);
+           $this->logger->error('cURL error in getTravelTime: ' . curl_error($ch), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Use Symfony logger
             curl_close($ch);
-            return 15; // Return a default/fallback value (or throw an exception)
+            return null; // Return null on error.
         }
 
         curl_close($ch);
         $data = json_decode($response, true);
 
-        // Check API response status and extract travel time
+
         if ($data && $data['status'] == 'OK' && $data['rows'][0]['elements'][0]['status'] == 'OK') {
             $durationInSeconds = $data['rows'][0]['elements'][0]['duration']['value'];
-            return (int) round($durationInSeconds / 60); // Convert seconds to minutes
+            return (int)round($durationInSeconds / 60); // Convert seconds to minutes
         } else {
-            PrestaShopLogger::addLog("Distance Matrix API error - Response: " . print_r($data, true), 3);
-            return 15; // Return a default/fallback value (or handle differently)
+             $this->logger->error("Distance Matrix API error - Response: " . print_r($data, true), ['module' => 'AppointmentManager', 'object_type' => 'ItineraryGenerator']); // Log full response
+            return null; // Return null on API error
         }
     }
 }
