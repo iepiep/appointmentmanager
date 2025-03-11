@@ -66,7 +66,12 @@ class ItineraryMapController extends FrameworkBundleAdminController
 
         // Generate the itinerary
         $itineraryGenerator = $this->get('appointmentmanager.itinerary_generator');
-        $itinerary = $itineraryGenerator->generateItinerary();
+        $homeAddress = [ // Get home address from configuration
+            'address' => Configuration::get('APPOINTMENTMANAGER_HOME_ADDRESS'),
+            'postal_code' => Configuration::get('APPOINTMENTMANAGER_HOME_POSTAL_CODE'),
+            'city' => Configuration::get('APPOINTMENTMANAGER_HOME_CITY')
+        ];
+        $itinerary = $itineraryGenerator->generateItinerary($homeAddress, $appointments, $config); // Pass the data
 
           // Check if itinerary generation was successful
         if (empty($itinerary)) {

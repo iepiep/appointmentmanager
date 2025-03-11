@@ -1,4 +1,4 @@
 services:
     appointmentmanager.itinerary_generator:
         class: AppointmentManager\Service\ItineraryGenerator
-        arguments: ['@prestashop.adapter.legacy.logger']
+        arguments: ['@prestashop.core.logger']

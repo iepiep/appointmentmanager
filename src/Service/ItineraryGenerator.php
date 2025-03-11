@@ -22,15 +22,17 @@ class ItineraryGenerator
     protected array $appointments;
     protected array $config;
 
-    public function __construct(array $home, array $appointments, array $config)
+    public function __construct(
+        private \PrestaShop\PrestaShop\Core\Localization\AddressFormatterInterface $addressFormatter, // added
+        private \PrestaShop\PrestaShop\Core\LoggerInterface $logger // corrected
+    ){}
+
+    public function generateItinerary(array $home, array $appointments, array $config): array
     {
-        $this->home = $home;
+        $this->home = $home; // Set the home address
         $this->appointments = $appointments;
         $this->config = $config;
-    }
-
-    public function generateItinerary(): array
-    {
+        
         $points = [];
 
         // Geocode home address (only once)
