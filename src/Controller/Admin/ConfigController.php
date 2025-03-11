@@ -22,6 +22,8 @@ class ConfigController extends FrameworkBundleAdminController
 {
     public function indexAction(Request $request)
     {
+        die('ConfigController indexAction reached'); // ADDED FOR DEBUGGING
+
         $data = array(
             'google_api_key'      => \Configuration::get('APPOINTMENTMANAGER_GOOGLE_API_KEY'),
             'start_time'          => \Configuration::get('APPOINTMENTMANAGER_START_TIME'),

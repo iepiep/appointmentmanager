@@ -31,22 +31,50 @@ class AppointmentManager extends Module
     }
     public function install()
     {
-        if (!parent::install() ||
-            !$this->installDB() ||
-            !$this->installTabs() ||
-            !$this->registerHook('displayHome') ||
-            !$this->registerHook('displayBanner')
-        ) {
+        PrestaShopLogger::addLog('AppointmentManager: Starting install process...', 1, null, 'AppointmentManager');
+
+        if (!parent::install()) {
+            PrestaShopLogger::addLog('AppointmentManager: parent::install() failed.', 3, null, 'AppointmentManager');
             return false;
         }
-        // Good practice to use trans() for default values, even if they are unlikely to change
+        PrestaShopLogger::addLog('AppointmentManager: parent::install() successful.', 1, null, 'AppointmentManager');
+
+        if (!$this->installDB()) {
+            PrestaShopLogger::addLog('AppointmentManager: installDB() failed.', 3, null, 'AppointmentManager');
+            return false;
+        }
+        PrestaShopLogger::addLog('AppointmentManager: installDB() successful.', 1, null, 'AppointmentManager');
+
+        if (!$this->installTabs()) {
+            PrestaShopLogger::addLog('AppointmentManager: installTabs() failed.', 3, null, 'AppointmentManager');
+            return false;
+        }
+        PrestaShopLogger::addLog('AppointmentManager: installTabs() successful.', 1, null, 'AppointmentManager');
+
+
+        if (!$this->registerHook('displayHome')) {
+            PrestaShopLogger::addLog('AppointmentManager: registerHook(displayHome) failed.', 3, null, 'AppointmentManager');
+             return false;
+        }
+        PrestaShopLogger::addLog('AppointmentManager: registerHook(displayHome) successful.', 1, null, 'AppointmentManager');
+
+
+        if (!$this->registerHook('displayBanner')) {
+            PrestaShopLogger::addLog('AppointmentManager: registerHook(displayBanner) failed.', 3, null, 'AppointmentManager');
+            return false;
+        }
+        PrestaShopLogger::addLog('AppointmentManager: registerHook(displayBanner) successful.', 1, null, 'AppointmentManager');
+
+
         Configuration::updateValue('APPOINTMENTMANAGER_GOOGLE_API_KEY', '');
         Configuration::updateValue('APPOINTMENTMANAGER_START_TIME', '08:30');
         Configuration::updateValue('APPOINTMENTMANAGER_APPOINTMENT_LENGTH', 120);
         Configuration::updateValue('APPOINTMENTMANAGER_BREAK_LENGTH', 60);
-        Configuration::updateValue('APPOINTMENTMANAGER_HOME_ADDRESS', ''); // Home address
-        Configuration::updateValue('APPOINTMENTMANAGER_HOME_POSTAL_CODE', ''); // Home postal code
-        Configuration::updateValue('APPOINTMENTMANAGER_HOME_CITY', ''); // Home city
+        Configuration::updateValue('APPOINTMENTMANAGER_HOME_ADDRESS', '');
+        Configuration::updateValue('APPOINTMENTMANAGER_HOME_POSTAL_CODE', '');
+        Configuration::updateValue('APPOINTMENTMANAGER_HOME_CITY', '');
+
+        PrestaShopLogger::addLog('AppointmentManager: Installation process completed.', 1, null, 'AppointmentManager');
         return true;
     }
     public function uninstall()
@@ -70,6 +98,9 @@ class AppointmentManager extends Module
     {
         $sql_file = dirname(__FILE__).'/src/sql/install.sql';
         if (!file_exists($sql_file)) {
+            $error_message = 'SQL installation file not found: ' . $sql_file;
+            PrestaShopLogger::addLog('AppointmentManager: installDB() - ' . $error_message, 3, null, 'AppointmentManager');
+            $this->context->controller->errors[] = $this->trans($error_message, [], 'Modules.Appointmentmanager.Admin');
             return false;
         }
 
@@ -77,23 +108,25 @@ class AppointmentManager extends Module
         $sql_content = str_replace('Prefix_', _DB_PREFIX_, $sql_content);
         $sql_queries = array_filter(array_map('trim', explode(';', $sql_content)));
 
-        Db::getInstance()->execute('START TRANSACTION'); // Begin transaction
+        Db::getInstance()->execute('START TRANSACTION');
 
         try {
             foreach ($sql_queries as $query) {
                 if (trim($query) != '') {
                     if (!Db::getInstance()->execute($query)) {
-                        throw new PrestaShopDatabaseException('Error executing query: ' . $query); // More informative error
+                        $error_message = 'Error executing query: ' . $query . ' - Error Message: ' . Db::getInstance()->getMsgError();
+                        PrestaShopLogger::addLog('AppointmentManager: installDB() - ' . $error_message, 3, null, 'AppointmentManager');
+                        throw new PrestaShopDatabaseException($error_message);
                     }
                 }
             }
-            Db::getInstance()->execute('COMMIT'); // Commit transaction
+            Db::getInstance()->execute('COMMIT');
             return true;
 
         } catch (PrestaShopDatabaseException $e) {
-            Db::getInstance()->execute('ROLLBACK'); // Rollback in case of error
-            $this->context->controller->errors[] = $e->getMessage(); // Display error to user
-            PrestaShopLogger::addLog($e->getMessage(), 3, null, 'AppointmentManager', $this->id, true); // Log detailed error
+            Db::getInstance()->execute('ROLLBACK');
+            PrestaShopLogger::addLog('AppointmentManager: installDB() - Database error: ' . $e->getMessage(), 3, null, 'AppointmentManager');
+            $this->context->controller->errors[] = $e->getMessage();
             return false;
         }
     }
@@ -102,8 +135,7 @@ class AppointmentManager extends Module
         $sql = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'appointment_manager`';
         $result = Db::getInstance()->execute($sql);
         if (!$result) {
-            // Ajouter un log ou un message d'erreur pour aider au débogage
-            PrestaShopLogger::addLog('Erreur lors de la suppression de la table appointment_manager: ' . Db::getInstance()->getMsgError(), 3);
+            PrestaShopLogger::addLog('AppointmentManager: uninstallDB() - Error dropping table appointment_manager: ' . Db::getInstance()->getMsgError(), 3);
         }
         return $result;
     }
@@ -121,8 +153,12 @@ class AppointmentManager extends Module
             $mainTab->name[$lang['id_lang']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin');
         }
         if (!$mainTab->add()) {
+            $error_message_main_tab = 'Error adding Main Tab: ' . implode(', ', $mainTab->getErrors());
+            PrestaShopLogger::addLog('AppointmentManager: installTabs() - ' . $error_message_main_tab, 3, null, 'AppointmentManager');
             return false;
         }
+        PrestaShopLogger::addLog('AppointmentManager: installTabs() - Main Tab added successfully.', 1, null, 'AppointmentManager');
+
 
         // Config Tab
         $configTab = new Tab();
@@ -137,8 +173,12 @@ class AppointmentManager extends Module
             $configTab->name[$lang['id_lang']] = $this->trans('Config', [], 'Modules.Appointmentmanager.Admin');
         }
         if (!$configTab->add()) {
+            $error_message_config_tab = 'Error adding Config Tab: ' . implode(', ', $configTab->getErrors());
+            PrestaShopLogger::addLog('AppointmentManager: installTabs() - ' . $error_message_config_tab, 3, null, 'AppointmentManager');
             return false;
         }
+        PrestaShopLogger::addLog('AppointmentManager: installTabs() - Config Tab added successfully.', 1, null, 'AppointmentManager');
+
 
         // Customer List Tab
         $customerListTab = new Tab();
@@ -153,8 +193,12 @@ class AppointmentManager extends Module
             $customerListTab->name[$lang['id_lang']] = $this->trans('Customer List', [], 'Modules.Appointmentmanager.Admin');
         }
         if (!$customerListTab->add()) {
+            $error_message_customer_list_tab = 'Error adding Customer List Tab: ' . implode(', ', $customerListTab->getErrors());
+            PrestaShopLogger::addLog('AppointmentManager: installTabs() - ' . $error_message_customer_list_tab, 3, null, 'AppointmentManager');
             return false;
         }
+        PrestaShopLogger::addLog('AppointmentManager: installTabs() - Customer List Tab added successfully.', 1, null, 'AppointmentManager');
+
 
         return true;
     }
