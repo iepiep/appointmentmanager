@@ -23,6 +23,8 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
 {
     public const APPOINTMENTMANAGER_GOOGLE_API_KEY = 'APPOINTMENTMANAGER_GOOGLE_API_KEY';
     public const APPOINTMENTMANAGER_API_KEY_MAXLENGTH = 40;
+    public const APPOINTMENTMANAGER_APPOINTMENT_LENGTH = 'APPOINTMENTMANAGER_APPOINTMENT_LENGTH';
+    public const APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH = 'APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH'; // New constant for lunch break
 
     /**
      * @var ConfigurationInterface
@@ -39,6 +41,8 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
         $return = [];
 
         $return['google_api_key'] = $this->configuration->get(static::APPOINTMENTMANAGER_GOOGLE_API_KEY);
+        $return['appointment_length'] = $this->configuration->get(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH); // Get appointment length
+        $return['lunch_break_length'] = $this->configuration->get(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH); // Get lunch break length
 
         return $return;
     }
@@ -53,6 +57,10 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
             } else {
                 $errors[] = 'APPOINTMENTMANAGER_GOOGLE_API_KEY value is too long';
             }
+            // Save appointment length
+            $this->configuration->set(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH, $configuration['appointment_length']);
+            // Save lunch break length
+            $this->configuration->set(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH, $configuration['lunch_break_length']);
         }
 
         /* Errors are returned here. */
@@ -66,6 +74,8 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration): bool
     {
-        return isset($configuration['google_api_key']);
+        return isset($configuration['google_api_key'])
+            && isset($configuration['appointment_length'])
+            && isset($configuration['lunch_break_length']); // Validate lunch_break_length as well
     }
 }
