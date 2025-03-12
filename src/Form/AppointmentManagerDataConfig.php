@@ -19,7 +19,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 /**
  * Configuration is used to save data to configuration table and retrieve from it.
  */
-final class AppointmentManagerDataConfiguration implements DataConfigurationInterface
+final class AppointmentManagerDataConfig implements DataConfigurationInterface
 {
     public const APPOINTMENTMANAGER_GOOGLE_API_KEY = 'APPOINTMENTMANAGER_GOOGLE_API_KEY';
     public const APPOINTMENTMANAGER_API_KEY_MAXLENGTH = 40;
