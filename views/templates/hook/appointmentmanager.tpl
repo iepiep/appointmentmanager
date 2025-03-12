@@ -13,6 +13,8 @@
     <ul>
       <li><a href="{$module_link}" title="Click this link">Click me!</a></li>
     </ul>
+       <p>{$module_message}
+       </p>
   </div>
 </div>
 <!-- /Block appointmentmanager -->
