@@ -68,6 +68,16 @@ class AppointmentManager extends Module
         );
     }
 
+    public $tabs = [
+        [
+            'name' => 'Appointment Manager', // Fallback when the translation is unavailable
+            'class_name' => 'AppointmentManagerConfigurationController',
+            'parent_class_name' => 'AdminDashboard',
+            'wording' => 'Appointment Manager', // Translation key
+            'wording_domain' => 'Modules.Appointmentmanager.Admin', // Translation domain
+        ],
+    ];
+
     public function hookDisplayLeftColumn($params)
     {
         $this->context->smarty->assign([
