@@ -49,7 +49,7 @@ class AppointmentManager extends Module
         if (Shop::isFeatureActive()) {
             Shop::setContext(Shop::CONTEXT_ALL);
         }
-    
+
         return parent::install() &&
             $this->registerHook('displayLeftColumn') &&
             $this->registerHook('actionFrontControllerSetMedia') &&
@@ -105,9 +105,14 @@ class AppointmentManager extends Module
         );
     }
 
+    public function isUsingNewTranslationSystem()
+    {
+        return true;
+    }
+
     public function getContent()
     {
         $route = $this->get('router')->generate('appointment_manager_config');
         Tools::redirectAdmin($route);
     }
-  }
+}
