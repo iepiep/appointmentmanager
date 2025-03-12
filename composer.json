@@ -1,10 +1,13 @@
 {
-    "name": "prestashop/demosymfonyformsimple",
-    "description": "PrestaShop - Settings Form Examples",
+    "name": "solution61/appointmentmanager",
+    "description": "Manage appointment and create best itinerary",
     "license": "AFL-3.0",
     "authors": [
       {
-        "name": "PrestaShop Core Team"
+        "name": "Solution61",
+        "email": "r.minini@solutio61.fr",
+        "homepage": "https://www.solutio61.fr",
+        "role": "Developer"
       }
     ],
     "autoload": {

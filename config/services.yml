@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  # Appointment Manager configuration form
+  prestashop.module.appointmentmanager.config.form.type.appointmentmanager_configuration:
+    class: 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerConfigFormType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }

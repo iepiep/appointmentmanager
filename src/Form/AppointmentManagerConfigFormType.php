@@ -23,8 +23,8 @@ class AppointmentManagerConfigFormType extends TranslatorAwareType
     {
         $builder
             ->add('config_text', TextType::class, [
-                'label' => $this->trans('Configuration text', 'Modules.AppointmentManager.Admin'),
-                'help' => $this->trans('Maximum 32 characters', 'Modules.AppointmentManager.Admin'),
+                'label' => $this->trans('Goole API key', 'Modules.AppointmentManager.Admin'),
+                'help' => $this->trans('Maximum 40 characters', 'Modules.AppointmentManager.Admin'),
             ]);
     }
 }
