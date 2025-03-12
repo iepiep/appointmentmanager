@@ -62,7 +62,6 @@ class AppointmentManager extends Module
             parent::uninstall()
             && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
             && Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY')
-            && Configuration::deleteByName('APPOINTMENTMANAGER_API_KEY_MAXLENGTH')
             && Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH')
             && Configuration::deleteByName('APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH')
         );

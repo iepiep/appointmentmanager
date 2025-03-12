@@ -37,7 +37,7 @@ class AppointmentManagerConfigFormType extends TranslatorAwareType
                 [
                     'label' => $this->trans('Appointment length', 'Modules.AppointmentManager.Admin'),
                     'required'   => true,
-                    'help' => $this->trans('Enter appointment length in minutes (1-240)', 'Modules.AppointmentManager.Admin'),
+                    'help' => $this->trans('Enter appointment length in minutes (30-240)', 'Modules.AppointmentManager.Admin'),
                 ]
             )
             ->add(
@@ -46,7 +46,7 @@ class AppointmentManagerConfigFormType extends TranslatorAwareType
                 [
                     'label' => $this->trans('Lunch break length', 'Modules.AppointmentManager.Admin'),
                     'required'   => true,
-                    'help' => $this->trans('Enter lunch break length in minutes (1-90)', 'Modules.AppointmentManager.Admin'),
+                    'help' => $this->trans('Enter lunch break length in minutes (0-90)', 'Modules.AppointmentManager.Admin'),
                 ]
             );
     }

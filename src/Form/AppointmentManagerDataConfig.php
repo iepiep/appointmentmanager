@@ -22,7 +22,6 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 final class AppointmentManagerDataConfig implements DataConfigurationInterface
 {
     public const APPOINTMENTMANAGER_GOOGLE_API_KEY = 'APPOINTMENTMANAGER_GOOGLE_API_KEY';
-    public const APPOINTMENTMANAGER_API_KEY_MAXLENGTH = 40;
     public const APPOINTMENTMANAGER_APPOINTMENT_LENGTH = 'APPOINTMENTMANAGER_APPOINTMENT_LENGTH';
     public const APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH = 'APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH';
 
@@ -52,21 +51,21 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
-            if (strlen($configuration['google_api_key']) <= static::APPOINTMENTMANAGER_API_KEY_MAXLENGTH) {
+            if (strlen($configuration['google_api_key']) <= 40) {
                 $this->configuration->set(static::APPOINTMENTMANAGER_GOOGLE_API_KEY, $configuration['google_api_key']);
             } else {
                 $errors[] = 'appointmentmanager.configuration.google_api_key_too_long';
             }
 
             $appointmentLength = (int) $configuration['appointment_length'];
-            if ($appointmentLength < 1 || $appointmentLength > 240) {
+            if ($appointmentLength < 30 || $appointmentLength > 240) {
                 $errors[] = 'appointmentmanager.configuration.appointment_length_invalid_range';
             } else {
                 $this->configuration->set(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH, $configuration['appointment_length']);
             }
 
             $lunchBreakLength = (int) $configuration['lunch_break_length'];
-            if ($lunchBreakLength < 1 || $lunchBreakLength > 90) {
+            if ($lunchBreakLength < 0 || $lunchBreakLength > 90) {
                 $errors[] = 'appointmentmanager.configuration.lunch_break_length_invalid_range';
             } else {
                 $this->configuration->set(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH, $configuration['lunch_break_length']);
