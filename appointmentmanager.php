@@ -42,6 +42,32 @@ class AppointmentManager extends Module
         if (!Configuration::get('APPOINTMENTMANAGER_NAME')) {
             $this->warning = $this->trans('No name provided', [], 'Modules.Appointmentmanager.Admin');
         }
+
+        $mainTabNames = [];
+        $subTabNames = [];
+        foreach (Language::getLanguages(true) as $lang) {
+            $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabNames[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']); // Name for the sub-tab
+        }
+        $this->tabs = [
+            [
+                'class_name' => 'AppointmentManagerMainTab', // Unique class name for the main tab
+                'visible' => true,
+                'name' => $mainTabNames,
+                'parent_class_name' => 'AdminDashboard',
+                'wording' => 'Appointment Manager',
+                'wording_domain' => 'Modules.AppointmentManager.Admin'
+            ],
+            [
+                'route_name' => 'appointment_manager_config',
+                'class_name' => 'AppointmentManagerConfigurationController',
+                'visible' => true,
+                'name' => $subTabNames,
+                'parent_class_name' => 'AppointmentManagerMainTab',
+                'wording' => 'Configuration',
+                'wording_domain' => 'Modules.AppointmentManager.Admin'
+            ],
+        ];
     }
 
     public function install()
@@ -50,17 +76,19 @@ class AppointmentManager extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        return parent::install() &&
-            $this->registerHook('displayLeftColumn') &&
-            $this->registerHook('actionFrontControllerSetMedia') &&
-            $this->registerHook('displayRightColumn') &&
-            Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
+        return parent::install()
+            && $this->installTabs()
+            && $this->registerHook('displayLeftColumn')
+            && $this->registerHook('actionFrontControllerSetMedia')
+            && $this->registerHook('displayRightColumn')
+            && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
     }
 
     public function uninstall()
     {
         return (
             parent::uninstall()
+            && $this->uninstallTabs()
             && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
             && Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY')
             && Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH')
@@ -68,17 +96,7 @@ class AppointmentManager extends Module
         );
     }
 
-    public $tabs = [
-        [
-            'name' => 'Appointment Manager', // Fallback when the translation is unavailable
-            'class_name' => 'AppointmentManagerConfigurationController',
-            'parent_class_name' => 'AdminDashboard',
-            'wording' => 'Appointment Manager', // Translation key
-            'wording_domain' => 'Modules.Appointmentmanager.Admin', // Translation domain
-        ],
-    ];
-
-    public function hookDisplayLeftColumn($params)
+     public function hookDisplayLeftColumn($params)
     {
         $this->context->smarty->assign([
             'module_name' => Configuration::get('APPOINTMENTMANAGER_NAME'),

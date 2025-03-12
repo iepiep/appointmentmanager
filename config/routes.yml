@@ -4,5 +4,4 @@ appointment_manager_config:
   defaults:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\AppointmentManagerConfigurationController::index'
     # Needed to work with tab system
-    _legacy_controller: AdminAppointmentManager
-    _legacy_link: AdminAppointmentManager
+    _legacy_controller: 'AppointmentManagerConfigurationController'
