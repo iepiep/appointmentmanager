@@ -1,4 +1,4 @@
-appointmentmanager_config:
+appointment_manager_config:
   path: /appointmentmanager/configuration
   methods: [GET, POST]
   defaults:
