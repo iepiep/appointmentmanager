@@ -63,4 +63,9 @@ class AppointmentManager extends Module
             && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
         );
     }
-}
+    public function getContent()
+    {
+        $route = $this->get('router')->generate('appointmentmanager_config');
+        Tools::redirectAdmin($route);
+    }
+  }

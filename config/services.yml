@@ -3,13 +3,36 @@ services:
     public: true
 
   # Appointment Manager configuration form
-  prestashop.module.appointmentmanager.config.form.type.appointmentmanager_config:
+  prestashop.module.appointmentmanager.form.appointmentmanager_config_form_type:
     class: 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerConfigFormType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
 
-  prestashop.module.appointmentmanager.data.config.appointmentmanager_data_config:
+  prestashop.module.appointmentmanager.form.appointmentmanager_data_config:
     class: 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerDataConfig'
     arguments: ['@prestashop.adapter.legacy.configuration']
+
+  prestashop.module.appointmentmanager.form.appointmentmanager_data_provider:
+    class: 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerDataProvider'
+    arguments:
+      - '@prestashop.module.appointmentmanager.form.appointmentmanager_data_config'
+
+  prestashop.module.appointmentmanager.form.appointmentmanager_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.module.appointmentmanager.form.appointmentmanager_data_provider'
+      - 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerConfigFormType'
+      - 'AppointmentManagerConfig'
+
+appointmentmanager_config:
+  path: /appointmentmanager/configuration
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShop\Module\AppointmentManager\Controller\AppointmentManagerConfigurationController::index'
+    # Needed to work with tab system
+    _legacy_controller: AdminAppointmentManager
+    _legacy_link: AdminAppointmentManager
