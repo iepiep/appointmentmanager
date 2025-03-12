@@ -3,9 +3,13 @@ services:
     public: true
 
   # Appointment Manager configuration form
-  prestashop.module.appointmentmanager.config.form.type.appointmentmanager_configuration:
+  prestashop.module.appointmentmanager.config.form.type.appointmentmanager_config:
     class: 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerConfigFormType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
+
+  prestashop.module.appointmentmanager.data.config.appointmentmanager_data_config:
+    class: 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerDataConfig'
+    arguments: ['@prestashop.adapter.legacy.configuration']

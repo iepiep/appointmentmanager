@@ -22,7 +22,7 @@ class AppointmentManagerConfigFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('config_text', TextType::class, [
+            ->add('google_api_key', TextType::class, [
                 'label' => $this->trans('Goole API key', 'Modules.AppointmentManager.Admin'),
                 'help' => $this->trans('Maximum 40 characters', 'Modules.AppointmentManager.Admin'),
             ]);
