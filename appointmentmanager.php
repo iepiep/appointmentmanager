@@ -46,14 +46,15 @@ class AppointmentManager extends Module
         $mainTabNames = [];
         $subTabNames = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
-            $subTabNames[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']); // Name for the sub-tab
+            $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabNames[$lang['locale']] = $this->trans('Configuration', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
         }
         $this->tabs = [
             [
-                'class_name' => 'AppointmentManagerMainTab', // Unique class name for the main tab
+                'class_name' => 'AppointmentManagerMainTab',
                 'visible' => true,
                 'name' => $mainTabNames,
+                'parent_class_name' => 'DEFAULT',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
