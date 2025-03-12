@@ -54,7 +54,6 @@ class AppointmentManager extends Module
                 'class_name' => 'AppointmentManagerMainTab', // Unique class name for the main tab
                 'visible' => true,
                 'name' => $mainTabNames,
-                'parent_class_name' => 'AdminDashboard',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
