@@ -55,12 +55,22 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
             if (strlen($configuration['google_api_key']) <= static::APPOINTMENTMANAGER_API_KEY_MAXLENGTH) {
                 $this->configuration->set(static::APPOINTMENTMANAGER_GOOGLE_API_KEY, $configuration['google_api_key']);
             } else {
-                $errors[] = 'APPOINTMENTMANAGER_GOOGLE_API_KEY value is too long';
+                $errors[] = 'appointmentmanager.configuration.google_api_key_too_long';
             }
-            // Save appointment length
-            $this->configuration->set(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH, $configuration['appointment_length']);
-            // Save lunch break length
-            $this->configuration->set(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH, $configuration['lunch_break_length']);
+
+            $appointmentLength = (int) $configuration['appointment_length'];
+            if ($appointmentLength < 1 || $appointmentLength > 240) {
+                $errors[] = 'appointmentmanager.configuration.appointment_length_invalid_range';
+            } else {
+                $this->configuration->set(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH, $configuration['appointment_length']);
+            }
+
+            $lunchBreakLength = (int) $configuration['lunch_break_length'];
+            if ($lunchBreakLength < 1 || $lunchBreakLength > 90) {
+                $errors[] = 'appointmentmanager.configuration.lunch_break_length_invalid_range';
+            } else {
+                $this->configuration->set(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH, $configuration['lunch_break_length']);
+            }
         }
 
         /* Errors are returned here. */
