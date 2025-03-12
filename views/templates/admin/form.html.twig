@@ -1,14 +1,14 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {{ form_start(appointmentmanagerConfigurationForm) }}
+  {{ form_start(AppointmentManagerConfig) }}
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Text form types'|trans({}, 'Modules.AppointmentManager.Admin') }}
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
-        {{ form_widget(appointmentmanagerConfigurationForm) }}
+        {{ form_widget(AppointmentManagerConfig) }}
       </div>
     </div>
     <div class="card-footer">
@@ -19,5 +19,5 @@
       </div>
     </div>
   </div>
-  {{ form_end(appointmentmanagerConfigurationForm) }}
+  {{ form_end(AppointmentManagerConfig) }}
 {% endblock %}
