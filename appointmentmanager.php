@@ -49,11 +49,12 @@ class AppointmentManager extends Module
         if (Shop::isFeatureActive()) {
             Shop::setContext(Shop::CONTEXT_ALL);
         }
-
-        return (
-            parent::install()
-            && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager')
-        );
+    
+        return parent::install() &&
+            $this->registerHook('displayLeftColumn') &&
+            $this->registerHook('actionFrontControllerSetMedia') &&
+            $this->registerHook('displayRightColumn') &&
+            Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
     }
 
     public function uninstall()
@@ -66,6 +67,43 @@ class AppointmentManager extends Module
             && Configuration::deleteByName('APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH')
         );
     }
+
+    public function hookDisplayLeftColumn($params)
+    {
+        $this->context->smarty->assign([
+            'module_name' => Configuration::get('APPOINTMENTMANAGER_NAME'),
+            'module_link' => $this->context->link->getModuleLink('appointmentmanager', 'display')
+        ]);
+
+        return $this->display(__FILE__, 'appointmentmanager.tpl');
+    }
+
+    public function hookDisplayRightColumn($params)
+    {
+        return $this->hookDisplayLeftColumn($params);
+    }
+
+    public function hookActionFrontControllerSetMedia()
+    {
+        $this->context->controller->registerStylesheet(
+            'appointmentmanager-style',
+            'modules/' . $this->name . '/views/css/appointmentmanager.css',
+            [
+                'media' => 'all',
+                'priority' => 1000,
+            ]
+        );
+
+        $this->context->controller->registerJavascript(
+            'appointmentmanager-javascript',
+            'modules/' . $this->name . '/views/js/appointmentmanager.js',
+            [
+                'position' => 'bottom',
+                'priority' => 1000,
+            ]
+        );
+    }
+
     public function getContent()
     {
         $route = $this->get('router')->generate('appointment_manager_config');
