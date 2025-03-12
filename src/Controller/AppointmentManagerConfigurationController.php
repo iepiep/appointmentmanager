@@ -33,7 +33,7 @@ class AppointmentManagerConfigurationController extends FrameworkBundleAdminCont
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('appointmentmanager_config_form_type');
+                return $this->redirectToRoute('appointment_manager_config');
             }
 
             $this->flashErrors($errors);
