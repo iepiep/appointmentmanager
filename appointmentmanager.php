@@ -46,15 +46,15 @@ class AppointmentManager extends Module
         $mainTabNames = [];
         $subTabNames = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
-            $subTabNames[$lang['locale']] = $this->trans('Configuration', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabNames[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
         }
         $this->tabs = [
             [
                 'class_name' => 'AppointmentManagerMainTab',
                 'visible' => true,
                 'name' => $mainTabNames,
-                'parent_class_name' => 'DEFAULT',
+                'parent_class_name' => 'CONFIGURE',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
@@ -77,7 +77,6 @@ class AppointmentManager extends Module
         }
 
         return parent::install()
-            && $this->installTabs()
             && $this->registerHook('displayLeftColumn')
             && $this->registerHook('actionFrontControllerSetMedia')
             && $this->registerHook('displayRightColumn')
@@ -88,7 +87,6 @@ class AppointmentManager extends Module
     {
         return (
             parent::uninstall()
-            && $this->uninstallTabs()
             && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
             && Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY')
             && Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH')
