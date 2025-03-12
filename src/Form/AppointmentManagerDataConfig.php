@@ -24,7 +24,7 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
     public const APPOINTMENTMANAGER_GOOGLE_API_KEY = 'APPOINTMENTMANAGER_GOOGLE_API_KEY';
     public const APPOINTMENTMANAGER_API_KEY_MAXLENGTH = 40;
     public const APPOINTMENTMANAGER_APPOINTMENT_LENGTH = 'APPOINTMENTMANAGER_APPOINTMENT_LENGTH';
-    public const APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH = 'APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH'; // New constant for lunch break
+    public const APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH = 'APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH';
 
     /**
      * @var ConfigurationInterface
@@ -41,8 +41,8 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
         $return = [];
 
         $return['google_api_key'] = $this->configuration->get(static::APPOINTMENTMANAGER_GOOGLE_API_KEY);
-        $return['appointment_length'] = $this->configuration->get(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH); // Get appointment length
-        $return['lunch_break_length'] = $this->configuration->get(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH); // Get lunch break length
+        $return['appointment_length'] = $this->configuration->get(static::APPOINTMENTMANAGER_APPOINTMENT_LENGTH);
+        $return['lunch_break_length'] = $this->configuration->get(static::APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH);
 
         return $return;
     }
@@ -76,6 +76,6 @@ final class AppointmentManagerDataConfig implements DataConfigurationInterface
     {
         return isset($configuration['google_api_key'])
             && isset($configuration['appointment_length'])
-            && isset($configuration['lunch_break_length']); // Validate lunch_break_length as well
+            && isset($configuration['lunch_break_length']);
     }
 }

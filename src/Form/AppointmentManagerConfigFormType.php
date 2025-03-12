@@ -16,7 +16,6 @@ namespace PrestaShop\Module\AppointmentManager\Form;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class AppointmentManagerConfigFormType extends TranslatorAwareType
