@@ -65,7 +65,7 @@ class AppointmentManager extends Module
     }
     public function getContent()
     {
-        $route = $this->get('router')->generate('appointmentmanager_config');
+        $route = $this->get('router')->generate('appointment_manager_config');
         Tools::redirectAdmin($route);
     }
   }
