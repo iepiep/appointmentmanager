@@ -72,7 +72,8 @@ class AppointmentManager extends Module
     {
         $this->context->smarty->assign([
             'module_name' => Configuration::get('APPOINTMENTMANAGER_NAME'),
-            'module_link' => $this->context->link->getModuleLink('appointmentmanager', 'display')
+            'module_link' => $this->context->link->getModuleLink('appointmentmanager', 'display'),
+            'module_message' => $this->l('This is a simple text message')
         ]);
 
         return $this->display(__FILE__, 'appointmentmanager.tpl');
