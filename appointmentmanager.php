@@ -56,7 +56,7 @@ class AppointmentManager extends Module
                 'visible' => true,
                 'name' => $mainTabNames,
                 'icon' => 'directions',
-                'parent_class_name' => 'CONFIGURE',
+                'parent_class_name' => 'AdminParentModulesSf',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
