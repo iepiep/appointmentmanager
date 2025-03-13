@@ -24,12 +24,12 @@ class ItineraryService
     {
         $baseLocation = '25 rue de la Noé Pierre, 53960 Bonchamp-lès-Laval, France';
 
-        // Récupération des données des clients depuis la table dim_rdv
+        // Récupération des données des clients depuis la table appointment_manager
         $selectedIds = array_map('intval', $selectedIds);
         $placeholders = implode(',', array_fill(0, count($selectedIds), '?'));
         $sql = 'SELECT firstname, lastname, address, postal_code, city
-        FROM `' . _DB_PREFIX_ . 'dim_rdv`
-        WHERE id_dim_rdv IN (' . $placeholders . ')';
+        FROM `' . _DB_PREFIX_ . 'appointment_manager`
+        WHERE id_appointment_manager IN (' . $placeholders . ')';
         $results = \Db::getInstance()->executeS($sql, array_values($selectedIds));
 
         $clients = [];

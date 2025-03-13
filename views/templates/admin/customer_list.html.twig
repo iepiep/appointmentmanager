@@ -2,7 +2,7 @@
 {% block content %}
 <div class="panel">
     <h3>Appointment List</h3>
-    {# <form method="post" action="{{ path('admin_appointmentmanager_itinerary') }}"> #}
+    <form method="post" action="{{ path('admin_appointmentmanager_itinerary') }}">
     <table class="table">
         <thead>
             <tr>
@@ -38,7 +38,7 @@
         </tbody>
     </table>
     <button type="submit" class="btn btn-success">Make itinerary</button>
-    {# </form> #}
+    </form>
 </div>
 <script>
 document.getElementById('select_all').addEventListener('click', function(e){
