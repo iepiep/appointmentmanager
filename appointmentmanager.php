@@ -59,10 +59,10 @@ class AppointmentManager extends Module
                 'visible' => true,
                 'name' => $listTabNames,
                 'icon' => 'directions_car',
-                'parent_class_name' => 'CONFIGURE',
+                'parent_class_name' => 'IMPROVE',
                 'wording' => 'List',
                 'wording_domain' => 'Modules.Appointmentmanager.Admin'
-            ],
+            ]
         ];
     }
 
