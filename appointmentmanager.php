@@ -164,24 +164,24 @@ class AppointmentManager extends Module
         return true;
     }
 
-    public function getContent()
-    {
-        $route = $this->get('router')->generate('appointment_manager_config');
-
-        $testService = $this->get('PrestaShop\Module\AppointmentManager\Service\TestService'); // Try to get the test service
-        if ($testService) {
-            $message = $testService->testMethod();
-            die("Service is working: " . $message); // If it works, display a message and stop
-        } else {
-            die("Service NOT found in container!"); // If service is not found, display error
-        }
-
-        Tools::redirectAdmin($route); // This line will not be reached if die() is executed above
-    }
-
     // public function getContent()
     // {
     //     $route = $this->get('router')->generate('appointment_manager_config');
-    //     Tools::redirectAdmin($route);
+
+    //     $testService = $this->get('PrestaShop\Module\AppointmentManager\Service\TestService'); // Try to get the test service
+    //     if ($testService) {
+    //         $message = $testService->testMethod();
+    //         die("Service is working: " . $message); // If it works, display a message and stop
+    //     } else {
+    //         die("Service NOT found in container!"); // If service is not found, display error
+    //     }
+
+    //     Tools::redirectAdmin($route); // This line will not be reached if die() is executed above
     // }
+
+    public function getContent()
+    {
+        $route = $this->get('router')->generate('appointment_manager_config');
+        Tools::redirectAdmin($route);
+    }
 }
