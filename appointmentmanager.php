@@ -51,10 +51,11 @@ class AppointmentManager extends Module
         }
         $this->tabs = [
             [
-                'class_name' => 'AppointmentManagerMainTab',
+                'route_name' => '',
+                'class_name' => 'AppointmentManager',
                 'visible' => true,
                 'name' => $mainTabNames,
-                'parent_class_name' => 'CONFIGURE',
+                'parent_class_name' => 'DEFAULT',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
@@ -63,7 +64,8 @@ class AppointmentManager extends Module
                 'class_name' => 'AppointmentManagerConfigurationController',
                 'visible' => true,
                 'name' => $subTabNames,
-                'parent_class_name' => 'AppointmentManagerMainTab',
+                'icon' => 'settings',
+                'parent_class_name' => 'AppointmentManager',
                 'wording' => 'Configuration',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
