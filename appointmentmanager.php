@@ -63,7 +63,7 @@ class AppointmentManager extends Module
                 'route_name' => 'appointment_manager_config',
                 'class_name' => 'AppointmentManagerConfigurationController',
                 'visible' => true,
-                'name' => $$subTabConfigNames,
+                'name' => $subTabConfigNames,
                 'parent_class_name' => 'AppointmentManager',
                 'wording' => 'Configuration',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
@@ -160,15 +160,6 @@ class AppointmentManager extends Module
             'modules/' . $this->name . '/views/css/appointmentmanager.css',
             [
                 'media' => 'all',
-                'priority' => 1000,
-            ]
-        );
-
-        $this->context->controller->registerJavascript(
-            'appointmentmanager-javascript',
-            'modules/' . $this->name . '/views/js/appointmentmanager.js',
-            [
-                'position' => 'bottom',
                 'priority' => 1000,
             ]
         );
