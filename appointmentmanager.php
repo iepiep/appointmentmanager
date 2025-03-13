@@ -18,31 +18,7 @@ if (!defined('_PS_VERSION_')) {
 
 class AppointmentManager extends Module
 {
-   
-    public $tabs = [
-        [
-            'class_name' => 'AppointmentManager',
-            'parent' => '0',
-            'name' => 'AppointmentManager.Admin.Menu',
-            'visible' => true,
-        ],
-        [
-            'route_name' => 'appointment_manager_config',
-            'class_name' => 'AppointmentManagerConfigurationController',
-            'parent' => 'AppointmentManager',
-            'visible' => true,
-            'name' => 'AppointmentManager.Admin.Submenu1',
-            'icon' => 'settings',
-        ],
-        [
-            'route_name' => 'appointment_manager_config',
-            'class_name' => 'AppointmentManagerConfigurationController',
-            'parent' => 'AppointmentManager',
-            'visible' => true,
-            'name' => 'AppointmentManager.Admin.Submenu2',
-            'icon' => 'settings',
-        ],
-    ];
+
     public function __construct()
     {
         $this->name = 'appointmentmanager';
@@ -67,6 +43,44 @@ class AppointmentManager extends Module
         if (!Configuration::get('APPOINTMENTMANAGER_NAME')) {
             $this->warning = $this->trans('No name provided', [], 'Modules.Appointmentmanager.Admin');
         }
+
+        $mainTabNames = [];
+        $subTabNames = [];
+        foreach (Language::getLanguages(true) as $lang) {
+            $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabConfig[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabItinerary[$lang['locale']] = $this->trans('Itinerary', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+        }
+        $this->tabs = [
+            [
+                //'route_name' => 'appointment_manager_menu_dummy',
+                'class_name' => 'AppointmentManager',
+                'visible' => true,
+                'name' => $mainTabNames,
+                'icon' => 'rebase_edit',
+                'parent_class_name' => 'CONFIGURE',
+                'wording' => 'Appointment Manager',
+                'wording_domain' => 'Modules.AppointmentManager.Admin'
+            ],
+            [
+                'route_name' => 'appointment_manager_config',
+                'class_name' => 'AppointmentManagerConfigurationController',
+                'visible' => true,
+                'name' => $subTabConfig,
+                'parent_class_name' => 'AppointmentManager',
+                'wording' => 'Configuration',
+                'wording_domain' => 'Modules.AppointmentManager.Admin'
+            ],
+            [
+                'route_name' => 'appointment_manager_config',
+                'class_name' => 'AppointmentManagerConfigurationController',
+                'visible' => true,
+                'name' => $subTabItinerary,
+                'parent_class_name' => 'AppointmentManager',
+                'wording' => 'Itinerary',
+                'wording_domain' => 'Modules.AppointmentManager.Admin'
+            ],
+        ];
     }
 
     public function install()
