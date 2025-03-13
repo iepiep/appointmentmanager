@@ -8,8 +8,10 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerAppointmentListController' => $baseDir . '/src/Controller/Admin/AppointmentManagerAppointmentListController.php',
+    'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerItineraryController' => $baseDir . '/src/Controller/Admin/AppointmentManagerItineraryController.php',
     'PrestaShop\\Module\\AppointmentManager\\Controller\\AppointmentManagerConfigurationController' => $baseDir . '/src/Controller/AppointmentManagerConfigurationController.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerConfigFormType' => $baseDir . '/src/Form/AppointmentManagerConfigFormType.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => $baseDir . '/src/Form/AppointmentManagerDataConfig.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataProvider' => $baseDir . '/src/Form/AppointmentManagerDataProvider.php',
+    'PrestaShop\\Module\\AppointmentManager\\Service\\ItineraryService' => $baseDir . '/src/Service/ItineraryService.php',
 );
