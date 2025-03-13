@@ -19,13 +19,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CustomerListController extends FrameworkBundleAdminController
 {
-    public function indexAction(Request $request)
+    public function index()
     {
-
         echo "It works!";
-
-        // $sql = 'SELECT * FROM `'._DB_PREFIX_.'appointment_manager`';
-        // $appointments = \Db::getInstance()->executeS($sql);
-        // return $this->render('@Modules/appointmentmanager/views/templates/admin/customer_list.html.twig', ['appointments' => $appointments]);
     }
+
+    // public function index(Request $request)
+    // {
+    //     $sql = 'SELECT * FROM `'._DB_PREFIX_.'appointment_manager`';
+    //     $appointments = \Db::getInstance()->executeS($sql);
+    //     return $this->render('@Modules/appointmentmanager/views/templates/admin/customer_list.html.twig', ['appointments' => $appointments]);
+    // }
 }

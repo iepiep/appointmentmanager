@@ -49,7 +49,7 @@ class AppointmentManager extends Module
         foreach (Language::getLanguages(true) as $lang) {
             $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
             $subTabConfig[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
-            $subTabItinerary[$lang['locale']] = $this->trans('Itinerary', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabItinerary[$lang['locale']] = $this->trans('List', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
         }
         $this->tabs = [
             [
@@ -72,12 +72,12 @@ class AppointmentManager extends Module
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
             [
-                'route_name' => 'appointment_manager_config',
-                'class_name' => 'AppointmentManagerConfigurationController',
+                'route_name' => 'appointment_manager_customerlist',
+                'class_name' => 'CustomerListController',
                 'visible' => true,
                 'name' => $subTabItinerary,
                 'parent_class_name' => 'AppointmentManager',
-                'wording' => 'Itinerary',
+                'wording' => 'List',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
         ];
