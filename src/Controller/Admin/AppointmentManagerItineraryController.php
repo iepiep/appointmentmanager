@@ -24,12 +24,10 @@ if (!defined('_PS_VERSION_')) {
 class AppointmentManagerItineraryController extends FrameworkBundleAdminController
 {
     private $itineraryService;
-    private $googleApiKey;
 
     public function __construct(ItineraryService $itineraryService)
     {
         $this->itineraryService = $itineraryService;
-        $this->googleApiKey = $googleApiKey;
     }
 
     public function index(Request $request): Response
