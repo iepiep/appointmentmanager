@@ -5,6 +5,7 @@ appointment_manager_config:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\AppointmentManagerConfigurationController::index'
     # Needed to work with tab system
     _legacy_controller: 'AppointmentManagerConfigurationController'
+    _legacy_link: 'AppointmentManagerConfiguration'
 
 appointment_manager_appointment_list:
   path: /appointmentmanager/appointmentlist
@@ -13,6 +14,7 @@ appointment_manager_appointment_list:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerAppointmentListController::index'
     # Needed to work with tab system
     _legacy_controller: 'AppointmentManagerAppointmentListController'
+    _legacy_link: 'AppointmentManagerAppointmentList'
 
 admin_appointment_manager_itinerary:
   path: /appointmentmanager/itinerary
@@ -21,3 +23,4 @@ admin_appointment_manager_itinerary:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerItineraryController::index'
     # Needed to work with tab system
     _legacy_controller: 'AppointmentManagerItineraryController'
+    _legacy_link: 'AppointmentManagerItinerary'
