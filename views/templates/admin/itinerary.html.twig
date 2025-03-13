@@ -1,91 +1,80 @@
-/**
- *  Copyright (c) 2025 iepiep <r.minini@solution61.fr>
- *
- *  This source file is subject to the MIT license that is bundled
- *  with this source code in the file LICENSE.
- *
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to r.minini@solution61.fr so we can send you a copy immediately.
- */
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %} 
 
 {% block content %}
-    {% if errors|length > 0 %}
+    {% if errors is defined and errors|length > 0 %}
         <div class="alert alert-danger">
             {% for error in errors %}
                 <p>{{ error|escape }}</p>
             {% endfor %}
         </div>
-    {% else %}
-        <h2>{{ 'Itinéraire optimisé'|trans({}, 'Modules.Appointmentmanager.Admin')|default("Itinéraire optimisé")|escape }}</h2>
+    {% endif %}
 
-        <!-- Carte Google Maps -->
-        <div id="map" style="width: 100%; height: 400px;"></div>
+    <h2>{{ 'Itinéraire optimisé'|trans({}, 'Modules.Appointmentmanager.Admin')|default("Itinéraire optimisé")|escape }}</h2>
 
-        <!-- Récapitulatif de l'itinéraire -->
-        <h3>{{ 'Résumé de l\'itinéraire'|trans({}, 'Modules.Appointmentmanager.Admin')|default("Résumé de l'itinéraire")|escape }}</h3>
+    <!-- Carte Google Maps -->
+    <div id="map" style="width: 100%; height: 400px;"></div>
 
-        <ul>
-            {% for appointment in itinerary_schedule|default([]) %}
-                <li>
-                    {{ appointment.time|escape }} - {{ appointment.firstname|escape }} {{ appointment.lastname|escape }} - {{ appointment.address|escape }}
-                </li>
+    <!-- Récapitulatif de l'itinéraire -->
+    <h3>{{ 'Résumé de l\'itinéraire'|trans({}, 'Modules.Appointmentmanager.Admin')|default("Résumé de l'itinéraire")|escape }}</h3>
+
+    <ul>
+        {% for appointment in itinerary_schedule|default([]) %}
+            <li>
+                {{ appointment.time|escape }} - {{ appointment.firstname|escape }} {{ appointment.lastname|escape }} - {{ appointment.address|escape }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Inclusion de l'API Google Maps et affichage de l'itinéraire -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key|escape }}&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+            var mapOptions = {
+                zoom: 10,
+                center: {
+                    lat: 48.0,
+                    lng: -0.1
+                } // Centre approximatif ; à ajuster en fonction des adresses réelles
+            };
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            directionsRenderer.setMap(map);
+
+            // Construction du tableau des adresses depuis optimized_route
+            var addresses = [];
+            {% for stop in optimized_route %}
+                addresses.push("{{ stop.full_address|escape('js') }}");
             {% endfor %}
-        </ul>
 
-        <!-- Inclusion de l'API Google Maps et affichage de l'itinéraire -->
-        <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key|escape }}&callback=initMap" async defer></script>
-        <script>
-            function initMap() {
-                var directionsService = new google.maps.DirectionsService();
-                var directionsRenderer = new google.maps.DirectionsRenderer();
-                var mapOptions = {
-                    zoom: 10,
-                    center: {
-                        lat: 48.0,
-                        lng: -0.1
-                    } // Centre approximatif ; à ajuster en fonction des adresses réelles
-                };
-                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                directionsRenderer.setMap(map);
+            if (addresses.length < 2)
+                return;
 
-                // Construction du tableau des adresses depuis optimized_route
-                var addresses = [];
-                {% for stop in optimized_route %}
-                    addresses.push("{{ stop.full_address|escape('js') }}");
-                {% endfor %}
-
-                if (addresses.length < 2)
-                    return;
-
-                var origin = addresses[0];
-                var destination = addresses[addresses.length - 1];
-                var waypts = [];
-                // Les arrêts intermédiaires (entre le départ et le retour à la base)
-                for (var i = 1; i < addresses.length - 1; i++) {
-                    waypts.push({
-                        location: addresses[i],
-                        stopover: true
-                    });
-                }
-
-                var request = {
-                    origin: origin,
-                    destination: destination,
-                    waypoints: waypts,
-                    travelMode: google.maps.TravelMode.DRIVING
-                };
-
-                directionsService.route(request, function(result, status) {
-                    if (status == google.maps.DirectionsStatus.OK) {
-                        directionsRenderer.setDirections(result);
-                    } else {
-                        console.error("{{ 'Erreur lors de la récupération de l\'itinéraire'|trans({}, 'Modules.Appointmentmanager.Admin')|escape('js') }}: " + status);
-                    }
+            var origin = addresses[0];
+            var destination = addresses[addresses.length - 1];
+            var waypts = [];
+            // Les arrêts intermédiaires (entre le départ et le retour à la base)
+            for (var i = 1; i < addresses.length - 1; i++) {
+                waypts.push({
+                    location: addresses[i],
+                    stopover: true
                 });
             }
-        </script>
-    {% endif %}
+
+            var request = {
+                origin: origin,
+                destination: destination,
+                waypoints: waypts,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+
+            directionsService.route(request, function(result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(result);
+                } else {
+                    console.error("{{ 'Erreur lors de la récupération de l\'itinéraire'|trans({}, 'Modules.Appointmentmanager.Admin')|escape('js') }}: " + status);
+                }
+            });
+        }
+    </script>
 {% endblock %}

@@ -26,11 +26,11 @@ class ItineraryService
 
         // Récupération des données des clients depuis la table appointment_manager
         $selectedIds = array_map('intval', $selectedIds);
-        $placeholders = implode(',', array_fill(0, count($selectedIds), '?'));
+        $idsString = implode(',', $selectedIds);
         $sql = 'SELECT firstname, lastname, address, postal_code, city
-        FROM `' . _DB_PREFIX_ . 'appointment_manager`
-        WHERE id_appointment_manager IN (' . $placeholders . ')';
-        $results = \Db::getInstance()->executeS($sql, array_values($selectedIds));
+                FROM `' . _DB_PREFIX_ . 'appointment_manager`
+                WHERE id_appointment_manager IN (' . $idsString . ')';
+        $results = \Db::getInstance()->executeS($sql);       
 
         $clients = [];
         foreach ($results as $row) {
