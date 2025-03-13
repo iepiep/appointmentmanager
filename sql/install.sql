@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `Prefix_appointment_manager` (
+CREATE TABLE IF NOT EXISTS `PREFIX_appointment_manager` (
     `id_appointment_manager` INT(11) NOT NULL AUTO_INCREMENT,
     `lastname` VARCHAR(255) NOT NULL,
     `firstname` VARCHAR(255) NOT NULL,
