@@ -58,6 +58,7 @@ class AppointmentManager extends Module
                 'class_name' => 'AppointmentManagerMainTab',
                 'visible' => true,
                 'name' => $listTabNames,
+                'icon' => 'rebase_edit',
                 'parent_class_name' => 'CONFIGURE',
                 'wording' => 'List',
                 'wording_domain' => 'Modules.Appointmentmanager.Admin'
