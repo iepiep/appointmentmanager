@@ -45,7 +45,7 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
         try {
             $itineraryData = $this->itineraryService->calculateItinerary($selectedIds, $googleApiKey);
         } catch (\Exception $e) {
-            $this->addFlash('error', $this->trans('Error calculating itinerary: %error%', ['%error%' => $e->getMessage()], 'Modules.Appointmentmanager.Admin'));
+            $this->addFlash('error', $this->trans('Error calculating itinerary: %error%', 'Modules.Appointmentmanager.Admin',  ['%error%' => $e->getMessage()]));
 
             return $this->redirectToRoute('appointment_manager_appointment_list');
         }
