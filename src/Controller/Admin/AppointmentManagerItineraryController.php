@@ -4,7 +4,7 @@
  * @copyright 2025 Roberto Minini
  * @license MIT
  *
- * This file is part of the dimrdv project.
+ * This file is part of the Appointment Manager project.
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -32,12 +32,12 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
 
     public function index(Request $request): Response
     {
-        $selectedIds = $request->request->get('selected', []);
+        $selectedIds = $request->request->get('appointments', []);
 
         if (empty($selectedIds) || !is_array($selectedIds)) {
-            $this->addFlash('error', $this->trans('No appointments selected.', 'Modules.Dimrdv.Admin'));
+            $this->addFlash('error', $this->trans('No appointments selected.', 'Modules.Appointmentmanager.Admin'));
 
-            return $this->redirectToRoute('admin_dimrdv_gestionrdv_index'); // Redirect back to the RDV list
+            return $this->redirectToRoute('appointment_manager_appointment_list'); // Redirect back to the RDV list
         }
 
         $googleApiKey = Configuration::get('APPOINTMENTMANAGER_GOOGLE_API_KEY');
@@ -45,12 +45,12 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
         try {
             $itineraryData = $this->itineraryService->calculateItinerary($selectedIds, $googleApiKey);
         } catch (\Exception $e) {
-            $this->addFlash('error', $this->trans('Error calculating itinerary: %error%', ['%error%' => $e->getMessage()], 'Modules.Dimrdv.Admin'));
+            $this->addFlash('error', $this->trans('Error calculating itinerary: %error%', ['%error%' => $e->getMessage()], 'Modules.Appointmentmanager.Admin'));
 
-            return $this->redirectToRoute('admin_dimrdv_gestionrdv_index');
+            return $this->redirectToRoute('appointment_manager_appointment_list');
         }
 
-        return $this->render('@Modules/dimrdv/views/templates/admin/itinerary.html.twig', [
+        return $this->render('@Modules/appointmentmanager/views/templates/admin/itinerary.html.twig', [
             'optimized_route' => $itineraryData['optimized_route'],
             'itinerary_schedule' => $itineraryData['itinerary_schedule'],
             'google_maps_api_key' => $googleApiKey,
