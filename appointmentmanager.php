@@ -42,6 +42,27 @@ class AppointmentManager extends Module
         if (!Configuration::get('APPOINTMENTMANAGER_NAME')) {
             $this->warning = $this->trans('No name provided', [], 'Modules.Appointmentmanager.Admin');
         }
+
+        $tabNames = [];
+        foreach (Language::getLanguages(true) as $lang) {
+            $tabNames[$lang['locale']] = $this->trans('Link List', array(), 'Modules.Linklist.Admin', $lang['locale']);
+        }
+
+        $listTabNames = [];
+        foreach (Language::getLanguages(true) as $lang) {
+            $listTabNames[$lang['id_lang']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
+        }
+        $this->tabs = [
+            [
+                'route_name' => 'appointment_manager_appointment_list',
+                'class_name' => 'AppointmentManagerMainTab',
+                'visible' => true,
+                'name' => $listTabNames,
+                'parent_class_name' => 'CONFIGURE',
+                'wording' => 'List',
+                'wording_domain' => 'Modules.Appointmentmanager.Admin'
+            ],
+        ];
     }
 
     public function install()
@@ -51,7 +72,6 @@ class AppointmentManager extends Module
         }
 
         return parent::install()
-            && $this->installTabs()
             && $this->installSql()
             && $this->registerHook('displayLeftColumn')
             && $this->registerHook('actionFrontControllerSetMedia')
@@ -62,82 +82,11 @@ class AppointmentManager extends Module
     public function uninstall()
     {
         return parent::uninstall()
-            && $this->uninstallTabs()
             && $this->uninstallSql()
             && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
             && Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY')
             && Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH')
             && Configuration::deleteByName('APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH');
-    }
-
-    public function installTabs(): bool
-    {
-        $mainTabNames = [];
-        $subTabConfigNames = [];
-        foreach (Language::getLanguages(true) as $lang) {
-            $mainTabNames[$lang['id_lang']] = $this->trans('Appointment Manager', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
-            $subTabConfigNames[$lang['id_lang']] = $this->trans('Configuration', [], 'Modules.Appointmentmanager.Admin', $lang['locale']);
-        }
-
-        // Install Main Tab
-        $mainTabId = (int) Tab::getIdFromClassName('AppointmentManagerMainTab');
-        if (!$mainTabId) {
-            $mainTabId = null;
-        }
-
-        $mainTab = new Tab($mainTabId);
-        $mainTab->active = 1;
-        $mainTab->class_name = 'AppointmentManagerMainTab';
-        $mainTab->route_name = 'appointment_manager_appointment_list';
-        $mainTab->name = $mainTabNames;
-        $mainTab->icon = 'directions';
-        $mainTab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE');
-        $mainTab->module = $this->name;
-
-        if (!$mainTab->save()) {
-            return false;
-        }
-
-        // Install Sub Tab (Configuration)
-        $subTabId = (int) Tab::getIdFromClassName('AppointmentManagerConfigSubTab');
-        if (!$subTabId) {
-            $subTabId = null;
-        }
-
-        $subTab = new Tab($subTabId);
-        $subTab->active = 1;
-        $subTab->class_name = 'AppointmentManagerConfigSubTab';
-        $subTab->route_name = 'appointment_manager_config';
-        $subTab->name = $subTabConfigNames;
-        $subTab->id_parent = $mainTab->id;
-        $subTab->module = $this->name;
-
-        if (!$subTab->save()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function uninstallTabs(): bool
-    {
-        $mainTabId = (int) Tab::getIdFromClassName('AppointmentManagerMainTab');
-        if ($mainTabId) {
-            $mainTab = new Tab($mainTabId);
-            if (!$mainTab->delete()) {
-                return false;
-            }
-        }
-
-        $subTabId = (int) Tab::getIdFromClassName('AppointmentManagerConfigSubTab');
-        if ($subTabId) {
-            $subTab = new Tab($subTabId);
-            if (!$subTab->delete()) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private function installSql(): bool
