@@ -9,12 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
- namespace PrestaShop\Module\AppointmentManager\Controller\Admin;
+namespace PrestaShop\Module\AppointmentManager\Controller\Admin;
 
 use PrestaShop\Module\AppointmentManager\Service\ItineraryService;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Configuration;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -25,7 +26,7 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
     private $itineraryService;
     private $googleApiKey;
 
-    public function __construct(ItineraryService $itineraryService, string $googleApiKey)
+    public function __construct(ItineraryService $itineraryService)
     {
         $this->itineraryService = $itineraryService;
         $this->googleApiKey = $googleApiKey;
@@ -41,8 +42,10 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
             return $this->redirectToRoute('admin_dimrdv_gestionrdv_index'); // Redirect back to the RDV list
         }
 
+        $googleApiKey = Configuration::get('APPOINTMENTMANAGER_GOOGLE_API_KEY');
+
         try {
-            $itineraryData = $this->itineraryService->calculateItinerary($selectedIds, $this->googleApiKey);
+            $itineraryData = $this->itineraryService->calculateItinerary($selectedIds, $googleApiKey);
         } catch (\Exception $e) {
             $this->addFlash('error', $this->trans('Error calculating itinerary: %error%', ['%error%' => $e->getMessage()], 'Modules.Dimrdv.Admin'));
 
@@ -52,7 +55,7 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
         return $this->render('@Modules/dimrdv/views/templates/admin/itinerary.html.twig', [
             'optimized_route' => $itineraryData['optimized_route'],
             'itinerary_schedule' => $itineraryData['itinerary_schedule'],
-            'google_maps_api_key' => $this->googleApiKey,
+            'google_maps_api_key' => $googleApiKey,
         ]);
     }
 }
