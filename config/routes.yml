@@ -19,3 +19,5 @@ admin_appointment_manager_itinerary:
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerItineraryController::index'
+    # Needed to work with tab system
+    _legacy_controller: 'AppointmentManagerItineraryController'
