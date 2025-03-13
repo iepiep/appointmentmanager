@@ -52,7 +52,7 @@ class AppointmentManager extends Module
         $this->tabs = [
             [
                 'route_name' => 'appointment_manager_appointment_list',
-                'class_name' => 'AppointmentManagerAppointmentListController',
+                'class_name' => 'AppointmentManager',
                 'visible' => true,
                 'name' => $mainTabNames,
                 'parent_class_name' => 'CONFIGURE',
