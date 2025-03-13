@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- Menu principal -->
+            <trans-unit id="AppointmentManager.Admin.Menu">
+                <source>Appointment Manager</source>
+                <target>Gestion des Rendez-vous</target>
+            </trans-unit>
+
+            <!-- Sous-menus -->
+            <trans-unit id="AppointmentManager.Admin.Submenu1">
+                <source>Configuration</source>
+                <target>Configuration</target>
+            </trans-unit>
+            <trans-unit id="AppointmentManager.Admin.Submenu2">
+                <source>Appointments</source>
+                <target>Rendez-vous</target>
+            </trans-unit>
+
+            <!-- Messages du module -->
+            <trans-unit id="AppointmentManager.Admin.ConfirmUninstall">
+                <source>Are you sure you want to uninstall?</source>
+                <target>Êtes-vous sûr de vouloir désinstaller ?</target>
+            </trans-unit>
+            <trans-unit id="AppointmentManager.Admin.NoNameProvided">
+                <source>No name provided</source>
+                <target>Aucun nom fourni</target>
+            </trans-unit>
+            <trans-unit id="AppointmentManager.Admin.ModuleDescription">
+                <source>Manage appointment and create best itinerary</source>
+                <target>Gérez les rendez-vous et créez le meilleur itinéraire</target>
+            </trans-unit>
+
+            <!-- Hooks -->
+            <trans-unit id="AppointmentManager.Admin.ModuleMessage">
+                <source>This is a simple text message</source>
+                <target>Ceci est un simple message texte</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
