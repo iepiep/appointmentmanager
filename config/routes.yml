@@ -6,7 +6,7 @@ appointment_manager_config:
     # Needed to work with tab system
     _legacy_controller: 'AppointmentManagerConfigurationController'
 
-appointment_manager_appointmentlist:
+appointment_manager_appointment_list:
   path: /appointmentmanager/appointmentlist
   methods: [GET, POST]
   defaults:

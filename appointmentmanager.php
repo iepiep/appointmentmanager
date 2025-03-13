@@ -18,7 +18,6 @@ if (!defined('_PS_VERSION_')) {
 
 class AppointmentManager extends Module
 {
-
     public function __construct()
     {
         $this->name = 'appointmentmanager';
@@ -48,16 +47,14 @@ class AppointmentManager extends Module
         $subTabNames = [];
         foreach (Language::getLanguages(true) as $lang) {
             $mainTabNames[$lang['locale']] = $this->trans('Appointment Manager', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
-            $subTabConfig[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
-            $subTabItinerary[$lang['locale']] = $this->trans('List', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
+            $subTabConfigNames[$lang['locale']] = $this->trans('Configuration', array(), 'Modules.Appointmentmanager.Admin', $lang['locale']);
         }
         $this->tabs = [
             [
-                'route_name' => '',
-                'class_name' => 'AppointmentManager',
+                'route_name' => 'appointment_manager_appointment_list',
+                'class_name' => 'AppointmentManagerAppointmentListController',
                 'visible' => true,
                 'name' => $mainTabNames,
-                'icon' => 'rebase_edit',
                 'parent_class_name' => 'CONFIGURE',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
@@ -66,20 +63,12 @@ class AppointmentManager extends Module
                 'route_name' => 'appointment_manager_config',
                 'class_name' => 'AppointmentManagerConfigurationController',
                 'visible' => true,
-                'name' => $subTabConfig,
+                'name' => $$subTabConfigNames,
                 'parent_class_name' => 'AppointmentManager',
                 'wording' => 'Configuration',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
-            [
-                'route_name' => 'appointment_manager_appointmentlist',
-                'class_name' => 'AppointmentManagerAppointmentListController',
-                'visible' => true,
-                'name' => $subTabItinerary,
-                'parent_class_name' => 'AppointmentManager',
-                'wording' => 'List',
-                'wording_domain' => 'Modules.AppointmentManager.Admin'
-            ],
+            
         ];
     }
 
@@ -93,21 +82,62 @@ class AppointmentManager extends Module
             && $this->registerHook('displayLeftColumn')
             && $this->registerHook('actionFrontControllerSetMedia')
             && $this->registerHook('displayRightColumn')
-            && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
+            && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager')
+            && $this->installSql();
     }
 
     public function uninstall()
     {
-        return (
-            parent::uninstall()
+        return parent::uninstall()
             && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
             && Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY')
             && Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH')
             && Configuration::deleteByName('APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH')
-        );
+            && $this->uninstallSql();
     }
 
-     public function hookDisplayLeftColumn($params)
+    private function installSql(): bool
+    {
+
+        $sql_file = _PS_MODULE_DIR_ . $this->name . '/sql/install.sql';
+
+        if (!file_exists($sql_file)) {
+            return false;
+        }
+
+        $sql_content = file_get_contents($sql_file);
+        $sql_content = str_replace('PREFIX_', _DB_PREFIX_, $sql_content);
+        $queries = preg_split("/;\s*[\r\n]+/", $sql_content);
+
+        foreach ($queries as $query) {
+            if (!empty(trim($query))) {
+                try {
+                    if (!Db::getInstance()->execute($query)) {
+                        return false;
+                    }
+                } catch (Exception $e) {
+                    PrestaShopLogger::addLog('SQL Error: ' . $e->getMessage(), 3);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function uninstallSql(): bool
+    {
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'appointment_manager`';
+
+        try {
+            return Db::getInstance()->execute($sql);
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog('SQL Uninstall Error: ' . $e->getMessage(), 3);
+
+            return false;
+        }
+    }
+
+    public function hookDisplayLeftColumn($params)
     {
         $this->context->smarty->assign([
             'module_name' => Configuration::get('APPOINTMENTMANAGER_NAME'),
