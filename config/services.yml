@@ -27,3 +27,21 @@ services:
       - '@prestashop.module.appointmentmanager.form.appointmentmanager_data_provider'
       - 'PrestaShop\Module\AppointmentManager\Form\AppointmentManagerConfigFormType'
       - 'AppointmentManagerConfig'
+
+ # Your new services
+  PrestaShop\Module\AppointmentManager\Service\ItineraryService: ~
+
+  PrestaShop\Module\AppointmentManager\Admin\AppointmentManagerItineraryController:
+    public: true
+    arguments:
+      - '@PrestaShop\Module\AppointmentManager\Service\ItineraryService'
+      - '%appointmentManager.google_api_key%'
+
+  PrestaShop\Module\AppointmentManager\Admin\AppointmentManagerConfigurationController:
+    public: true
+
+  PrestaShop\Module\AppointmentManager\Admin\AppointmentManagerAppointmentListController:
+    public: true
+
+parameters:
+  appointmentManager.google_api_key: '%env(APPOINTMENTMANAGER_GOOGLE_API_KEY)%'
