@@ -55,13 +55,14 @@ class AppointmentManager extends Module
                 'class_name' => 'AppointmentManager',
                 'visible' => true,
                 'name' => $mainTabNames,
+                'icon' => 'directions',
                 'parent_class_name' => 'CONFIGURE',
                 'wording' => 'Appointment Manager',
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
             [
                 'route_name' => 'appointment_manager_config',
-                'class_name' => 'AppointmentManagerConfigurationController',
+                'class_name' => 'AppointmentManagerConfig',
                 'visible' => true,
                 'name' => $subTabConfigNames,
                 'parent_class_name' => 'AppointmentManager',
