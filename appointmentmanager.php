@@ -53,7 +53,7 @@ class AppointmentManager extends Module
         }
         $this->tabs = [
             [
-                //'route_name' => 'appointment_manager_menu_dummy',
+                'route_name' => '',
                 'class_name' => 'AppointmentManager',
                 'visible' => true,
                 'name' => $mainTabNames,
@@ -72,8 +72,8 @@ class AppointmentManager extends Module
                 'wording_domain' => 'Modules.AppointmentManager.Admin'
             ],
             [
-                'route_name' => 'appointment_manager_customerlist',
-                'class_name' => 'CustomerListController',
+                'route_name' => 'appointment_manager_appointmentlist',
+                'class_name' => 'AppointmentManagerAppointmentListController',
                 'visible' => true,
                 'name' => $subTabItinerary,
                 'parent_class_name' => 'AppointmentManager',

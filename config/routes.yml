@@ -6,10 +6,10 @@ appointment_manager_config:
     # Needed to work with tab system
     _legacy_controller: 'AppointmentManagerConfigurationController'
 
-appointment_manager_customerlist:
-  path: /appointmentmanager/customerlist
+appointment_manager_appointmentlist:
+  path: /appointmentmanager/appointmentlist
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\CustomerListController::index'
+    _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerAppointmentListController::index'
     # Needed to work with tab system
-    _legacy_controller: 'CustomerListController'
+    _legacy_controller: 'AppointmentManagerAppointmentListController'

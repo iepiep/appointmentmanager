@@ -22,7 +22,10 @@ class ComposerStaticInit8fff24b0a344f073d218938a8b1f99af
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerAppointmentListController' => __DIR__ . '/../..' . '/src/Controller/Admin/AppointmentManagerAppointmentListController.php',
+        'PrestaShop\\Module\\AppointmentManager\\Controller\\AppointmentManagerConfigurationController' => __DIR__ . '/../..' . '/src/Controller/AppointmentManagerConfigurationController.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerConfigFormType' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerConfigFormType.php',
+        'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataConfig.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataProvider' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataProvider.php',
     );
 
