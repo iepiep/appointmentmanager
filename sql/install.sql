@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_appointment_manager` (
     `istest` TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id_appointment_manager`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `Prefix_appointment_manager` 
+INSERT INTO `PREFIX_appointment_manager` 
 (`lastname`, `firstname`, `address`, `postal_code`, `city`, `phone`, `email`, `rdv_option_1`, `rdv_option_2`, `visited`, `ishome`, `istest`)
 VALUES
 ('Supermarket', 'Carrefour', '1 Rue de Bretagne', '53000', 'Laval', '0123456789', 'carrefour@example.com', '2025-02-24 10:00', '2025-02-24 11:00', 0, 0, 1),
