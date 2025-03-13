@@ -36,7 +36,7 @@ services:
     class: 'PrestaShop\Module\AppointmentManager\Service\ItineraryService'
     public: true
 
-  PrestaShop\Module\AppointmentManager\Admin\AppointmentManagerItineraryController:
+  PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerItineraryController:
     class: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerItineraryController'
     public: true
     arguments:
