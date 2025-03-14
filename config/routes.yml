@@ -24,10 +24,4 @@ appointment_front_form:
   path: /appointmentmanager/form
   methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShop\Module\AppointmentManager\Controller\Front\AppointmentManagerAppointmentFrontController::index'
-
-appointment_invite:
-  path: /appointment/invite
-  methods: [GET]
-  defaults:
-    _controller: 'PrestaShop\Module\AppointmentManager\Controller\Front\AppointmentManagerInviteController::index'
+    _controller: 'PrestaShop\Module\AppointmentManager\Controller\Front\AppointmentManagerAppointmentFrontFormController::index'

@@ -132,17 +132,9 @@ class AppointmentManager extends Module
 
     public function hookDisplayHome($params)
     {
-        return $this->renderAppointmentInvite();
-    }
-
-    private function renderAppointmentInvite()
-    {
-        if (!isset($this->context) || !$this->context->link) {
-            return ''; // Empêcher toute erreur si le contexte est vide
-        }
-    
-        // Générer le lien manuellement avec le FrontController de PrestaShop
-        $appointmentLink = $this->context->link->getModuleLink('appointmentmanager', 'invite');
+        // IMPORTANT : pour générer une URL vers le contrôleur Symfony,
+        // on doit indiquer le paramètre "use_route" => true
+        $appointmentLink = $this->context->link->getModuleLink('appointmentmanager', 'form', ['use_route' => true]);
     
         $this->context->smarty->assign([
             'appointment_link' => $appointmentLink,

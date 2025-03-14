@@ -21,11 +21,10 @@ class AppointmentManagerInviteController extends FrontController
 {
     public function index(): Response
     {
-        // Générer le lien vers le formulaire via la méthode PrestaShop
         $link = $this->context->link->getModuleLink('appointmentmanager', 'form');
-
+    
         return $this->render('@Modules/appointmentmanager/views/templates/hook/appointment_invite.tpl', [
             'appointment_link' => $link,
         ]);
-    }
+    }    
 }

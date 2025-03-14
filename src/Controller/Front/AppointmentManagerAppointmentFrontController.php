@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\AppointmentManager\Controller\Front;
 
-use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
-use Doctrine\DBAL\Connection;
 use PrestaShopBundle\Controller\Front\FrontController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
 
 class AppointmentManagerAppointmentFrontController extends FrontController
 {
-    public function index(Request $request, Connection $connection): Response
+    public function index(Request $request): Response
     {
+        // Créer le formulaire à l'aide du FormType
         $form = $this->createForm(AppointmentManagerAppointmentFormType::class);
         $form->handleRequest($request);
 
@@ -46,12 +46,13 @@ class AppointmentManagerAppointmentFrontController extends FrontController
                     'rdv_option_2' => $data['rdv_option_2'],
                     'GDPR' => (new \DateTime())->format('Y-m-d H:i:s'),
                 ]);
-
-                $this->addFlash('success', 'Votre demande de rendez-vous a bien été enregistrée.');
-                return $this->redirectToRoute('appointment_front_form');
             }
+            $this->addFlash('success', 'Votre demande de rendez-vous a bien été enregistrée.');
+            // Redirection (par exemple, rediriger vers la même page ou vers une page de confirmation)
+            return $this->redirectToRoute('appointment_front_form');
         }
 
+        // Rendre le formulaire via un template Twig
         return $this->render('@Modules/appointmentmanager/views/templates/front/appointment_form.html.twig', [
             'appointmentForm' => $form->createView(),
         ]);
