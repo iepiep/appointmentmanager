@@ -137,12 +137,15 @@ class AppointmentManager extends Module
 
     private function renderAppointmentInvite()
     {
-        $symfonyUrl = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()
-            ->get('router')
-            ->generate('appointment_invite');
+        if (!isset($this->context) || !$this->context->link) {
+            return ''; // Empêcher toute erreur si le contexte est vide
+        }
+    
+        // Générer le lien manuellement avec le FrontController de PrestaShop
+        $appointmentLink = $this->context->link->getModuleLink('appointmentmanager', 'invite');
     
         $this->context->smarty->assign([
-            'appointment_link' => $symfonyUrl,
+            'appointment_link' => $appointmentLink,
         ]);
     
         return $this->fetch('module:appointmentmanager/views/templates/hook/appointment_invite.tpl');
