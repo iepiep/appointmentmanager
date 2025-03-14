@@ -30,4 +30,4 @@ appointment_invite:
   path: /appointment/invite
   methods: [GET]
   defaults:
-    _controller: 'Modules\AppointmentManager\Controller\Front\AppointmentManagerInviteController::index'
+    _controller: 'PrestaShop\Module\AppointmentManager\Controller\Front\AppointmentManagerInviteController::index'
