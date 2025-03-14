@@ -21,7 +21,7 @@ class AppointmentManagerInviteController extends FrontController
 {
     public function index(): Response
     {
-        $link = $this->context->link->getModuleLink('appointmentmanager', 'form');
+        $link = $this->generateUrl('appointment_manager_form');
     
         return $this->render('@Modules/appointmentmanager/views/templates/hook/appointment_invite.tpl', [
             'appointment_link' => $link,

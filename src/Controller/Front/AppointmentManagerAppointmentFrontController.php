@@ -51,7 +51,8 @@ class AppointmentManagerAppointmentFrontController extends ModuleFrontController
 
                     if ($success) {
                         $this->addFlash('success', $this->trans('Your appointment request has been successfully registered.', 'Modules.Appointmentmanager.Shop'));
-                        return $this->redirectToRoute('module-appointmentmanager-form');
+                        return $this->redirect($this->get('router')->generate('homepage'));
+
                     } else {
                         $this->addFlash('danger', $this->trans('An error occurred while saving your request.', 'Modules.Appointmentmanager.Shop'));
                     }
