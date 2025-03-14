@@ -25,10 +25,14 @@ class ComposerStaticInit8fff24b0a344f073d218938a8b1f99af
         'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerAppointmentListController' => __DIR__ . '/../..' . '/src/Controller/Admin/AppointmentManagerAppointmentListController.php',
         'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerItineraryController' => __DIR__ . '/../..' . '/src/Controller/Admin/AppointmentManagerItineraryController.php',
         'PrestaShop\\Module\\AppointmentManager\\Controller\\AppointmentManagerConfigurationController' => __DIR__ . '/../..' . '/src/Controller/AppointmentManagerConfigurationController.php',
+        'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentManagerAppointmentFrontController' => __DIR__ . '/../..' . '/src/Controller/Front/AppointmentManagerAppointmentFrontController.php',
+        'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentManagerInviteController' => __DIR__ . '/../..' . '/src/Controller/Front/AppointmentManagerInviteController.php',
+        'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerAppointmentFormType' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerAppointmentFormType.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerConfigFormType' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerConfigFormType.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataConfig.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataProvider' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataProvider.php',
         'PrestaShop\\Module\\AppointmentManager\\Service\\ItineraryService' => __DIR__ . '/../..' . '/src/Service/ItineraryService.php',
+        'PrestaShop\\Module\\AppointmentManager\\Service\\TestService' => __DIR__ . '/../..' . '/src/Service/TestService.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
