@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\AppointmentManager\Controller\Front;
 
-//use PrestaShopBundle\Controller\Front\FrontController; // INCORRECT - C'est l'erreur!
-use ModuleFrontController; // CORRECT - C'est ça qu'il faut utiliser
+use PrestaShopBundle\Controller\Front\FrontController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
