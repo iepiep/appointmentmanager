@@ -40,50 +40,62 @@ class AppointmentManagerAppointmentFormType extends AbstractType
 
         $builder
             ->add('lastname', TextType::class, [
-                'label' => 'Nom',
-                'constraints' => [new NotBlank()]
+                'label' => $this->trans('Last Name', 'Modules.Appointmentmanager.Shop'),
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'Prénom',
-                'constraints' => [new NotBlank()]
+                'label' => $this->trans('First Name', 'Modules.Appointmentmanager.Shop'),
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('address', TextType::class, [
-                'label' => 'Adresse',
-                'constraints' => [new NotBlank()]
+                'label' => $this->trans('Address', 'Modules.Appointmentmanager.Shop'),
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('postal_code', TextType::class, [
-                'label' => 'Code postal',
-                'constraints' => [new NotBlank()]
+                'label' => $this->trans('Postal Code', 'Modules.Appointmentmanager.Shop'),
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('city', TextType::class, [
-                'label' => 'Ville',
-                'constraints' => [new NotBlank()]
+                'label' => $this->trans('City', 'Modules.Appointmentmanager.Shop'),
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('phone', TelType::class, [
-                'label' => 'Téléphone',
-                'required' => false
+                'label' => $this->trans('Phone', 'Modules.Appointmentmanager.Shop'),
+                'required' => false,
+                'attr' => ['class' => 'form-control']
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
-                'required' => false
+                'label' => $this->trans('Email', 'Modules.Appointmentmanager.Shop'),
+                'required' => false,
+                'constraints' => [new Email(['message' => $this->trans('Please enter a valid email address.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('rdv_option_1', ChoiceType::class, [
-                'label' => 'Premier créneau',
+                'label' => $this->trans('First Time Slot', 'Modules.Appointmentmanager.Shop'),
                 'choices' => $dates,
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('rdv_option_2', ChoiceType::class, [
-                'label' => 'Deuxième créneau',
+                'label' => $this->trans('Second Time Slot', 'Modules.Appointmentmanager.Shop'),
                 'choices' => $dates,
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank(['message' => $this->trans('This field is required.', 'Modules.Appointmentmanager.Shop')])],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('GDPR', CheckboxType::class, [
-                'label' => 'GDPR',
+                'label' => $this->trans('I accept the privacy policy', 'Modules.Appointmentmanager.Shop'),
                 'mapped' => false,
-                'constraints' => [new NotBlank()]
+                'constraints' => [new NotBlank(['message' => $this->trans('You must accept the privacy policy.', 'Modules.Appointmentmanager.Shop')])],
+
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Envoyer'
+                'label' => $this->trans('Submit', 'Modules.Appointmentmanager.Shop'),
+                'attr' => ['class' => 'btn btn-primary']
             ]);
     }
-}
+}    
