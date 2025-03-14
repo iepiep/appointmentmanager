@@ -75,7 +75,6 @@ class AppointmentManager extends Module
         return parent::install()
             && $this->installSql()
             && $this->registerHook('displayHome')
-            && $this->registerHook('actionFrontControllerSetMedia')
             && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
     }
 
