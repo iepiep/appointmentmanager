@@ -41,8 +41,3 @@ services:
     public: true
     arguments:
       - '@PrestaShop\Module\AppointmentManager\Service\ItineraryService'
-
-# Test service
-  PrestaShop\Module\AppointmentManager\Service\TestService:
-    class: 'PrestaShop\Module\AppointmentManager\Service\TestService'
-    public: true
