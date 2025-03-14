@@ -1,0 +1,77 @@
+{% extends 'page.tpl' %}
+
+{% block content %}
+    <h2>Prendre un rendez-vous</h2>
+
+    {% for message in app.flashes('success') %}
+        <div id="popup-message" class="popup-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ form_start(appointmentForm) }}
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.lastname) }}
+        {{ form_widget(appointmentForm.lastname, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.firstname) }}
+        {{ form_widget(appointmentForm.firstname, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.address) }}
+        {{ form_widget(appointmentForm.address, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.postal_code) }}
+        {{ form_widget(appointmentForm.postal_code, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.city) }}
+        {{ form_widget(appointmentForm.city, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.phone) }}
+        {{ form_widget(appointmentForm.phone, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.email) }}
+        {{ form_widget(appointmentForm.email, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.rdv_option_1) }}
+        {{ form_widget(appointmentForm.rdv_option_1, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(appointmentForm.rdv_option_2) }}
+        {{ form_widget(appointmentForm.rdv_option_2, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_widget(appointmentForm.GDPR) }}
+        <label for="{{ appointmentForm.GDPR.vars.id }}">J’accepte la <a href="/politique-confidentialite" target="_blank">politique de confidentialité</a></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Prendre rendez-vous</button>
+
+    {{ form_end(appointmentForm) }}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.getElementById("popup-message")) {
+                setTimeout(function() {
+                    document.getElementById("popup-message").style.display = "none";
+                }, 3000);
+            }
+        });
+    </script>
+{% endblock %}
