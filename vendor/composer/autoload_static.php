@@ -32,7 +32,6 @@ class ComposerStaticInitdd4f2851d1e8d7fe3c17437f6d8e6c40
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataConfig.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataProvider' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataProvider.php',
         'PrestaShop\\Module\\AppointmentManager\\Service\\ItineraryService' => __DIR__ . '/../..' . '/src/Service/ItineraryService.php',
-        'PrestaShop\\Module\\AppointmentManager\\Service\\TestService' => __DIR__ . '/../..' . '/src/Service/TestService.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

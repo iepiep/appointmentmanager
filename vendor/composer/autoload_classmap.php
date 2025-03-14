@@ -17,5 +17,4 @@ return array(
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => $baseDir . '/src/Form/AppointmentManagerDataConfig.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataProvider' => $baseDir . '/src/Form/AppointmentManagerDataProvider.php',
     'PrestaShop\\Module\\AppointmentManager\\Service\\ItineraryService' => $baseDir . '/src/Service/ItineraryService.php',
-    'PrestaShop\\Module\\AppointmentManager\\Service\\TestService' => $baseDir . '/src/Service/TestService.php',
 );
