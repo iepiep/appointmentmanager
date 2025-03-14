@@ -74,15 +74,13 @@ class AppointmentManager extends Module
 
         return parent::install()
             && $this->installSql()
-            && $this->registerHook('displayHome')
-            && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
+            && $this->registerHook('displayHome');
     }
 
     public function uninstall()
     {
         return parent::uninstall()
             && $this->uninstallSql()
-            && Configuration::deleteByName('APPOINTMENTMANAGER_NAME')
             && Configuration::deleteByName('APPOINTMENTMANAGER_GOOGLE_API_KEY')
             && Configuration::deleteByName('APPOINTMENTMANAGER_APPOINTMENT_LENGTH')
             && Configuration::deleteByName('APPOINTMENTMANAGER_LUNCH_BREAK_LENGTH');
