@@ -17,42 +17,51 @@ use PrestaShopBundle\Controller\Front\FrontController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
+use Db;
 
 class AppointmentManagerAppointmentFrontController extends FrontController
 {
     public function index(Request $request): Response
     {
-        // Créer le formulaire à l'aide du FormType
         $form = $this->createForm(AppointmentManagerAppointmentFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            // Vérification : au moins un champ (phone ou email) doit être rempli
             if (empty($data['phone']) && empty($data['email'])) {
-                $this->addFlash('danger', 'Vous devez renseigner au moins un téléphone ou un email.');
+                $this->addFlash('danger', $this->trans('You must provide at least a phone number or an email address.', 'Modules.Appointmentmanager.Shop'));
             } else {
-                // Insertion en base de données
-                $connection->insert('appointment_manager', [
-                    'lastname' => $data['lastname'],
-                    'firstname' => $data['firstname'],
-                    'address' => $data['address'],
-                    'postal_code' => $data['postal_code'],
-                    'city' => $data['city'],
-                    'phone' => $data['phone'],
-                    'email' => $data['email'],
-                    'rdv_option_1' => $data['rdv_option_1'],
-                    'rdv_option_2' => $data['rdv_option_2'],
-                    'GDPR' => (new \DateTime())->format('Y-m-d H:i:s'),
-                ]);
+                // Insertion en base de données (CORRIGÉ)
+                try {
+                    $success = Db::getInstance()->insert('appointment_manager', [
+                        'lastname' => pSQL($data['lastname']),
+                        'firstname' => pSQL($data['firstname']),
+                        'address' => pSQL($data['address']),
+                        'postal_code' => pSQL($data['postal_code']),
+                        'city' => pSQL($data['city']),
+                        'phone' => pSQL($data['phone']),
+                        'email' => pSQL($data['email']),
+                        'rdv_option_1' => pSQL($data['rdv_option_1']),
+                        'rdv_option_2' => pSQL($data['rdv_option_2']),
+                        'GDPR' => (new \DateTime())->format('Y-m-d H:i:s'),
+                    ]);
+
+                    if ($success) {
+                        $this->addFlash('success', $this->trans('Your appointment request has been successfully registered.', 'Modules.Appointmentmanager.Shop'));
+                        // Redirection vers la même page (CORRIGÉ)
+                        return $this->redirectToRoute('module-appointmentmanager-form');
+                    } else {
+                        $this->addFlash('danger', $this->trans('An error occurred while saving your request.', 'Modules.Appointmentmanager.Shop'));
+                    }
+
+                } catch (\PrestaShopDatabaseException $e) {
+                     $this->addFlash('danger', $this->trans('An error occurred while saving your request.', 'Modules.Appointmentmanager.Shop').' '.$e->getMessage());
+                }
+
             }
-            $this->addFlash('success', 'Votre demande de rendez-vous a bien été enregistrée.');
-            // Redirection (par exemple, rediriger vers la même page ou vers une page de confirmation)
-            return $this->redirectToRoute('appointment_front_form');
         }
 
-        // Rendre le formulaire via un template Twig
         return $this->render('@Modules/appointmentmanager/views/templates/front/appointment_form.html.twig', [
             'appointmentForm' => $form->createView(),
         ]);
