@@ -74,9 +74,8 @@ class AppointmentManager extends Module
 
         return parent::install()
             && $this->installSql()
-            && $this->registerHook('displayLeftColumn')
+            && $this->registerHook('displayHome')
             && $this->registerHook('actionFrontControllerSetMedia')
-            && $this->registerHook('displayRightColumn')
             && Configuration::updateValue('APPOINTMENTMANAGER_NAME', 'Appointment Manager');
     }
 
@@ -131,53 +130,28 @@ class AppointmentManager extends Module
         }
     }
 
-    public function hookDisplayLeftColumn($params)
+    public function hookDisplayHome($params)
     {
+        return $this->renderAppointmentInvite();
+    }
+
+    private function renderAppointmentInvite()
+    {
+        $symfonyUrl = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()
+            ->get('router')
+            ->generate('appointment_invite');
+    
         $this->context->smarty->assign([
-            'module_name' => Configuration::get('APPOINTMENTMANAGER_NAME'),
-            'module_link' => $this->context->link->getModuleLink('appointmentmanager', 'display'),
-            'module_message' => $this->l('This is a simple text message')
+            'appointment_link' => $symfonyUrl,
         ]);
-
-        return $this->display(__FILE__, 'appointmentmanager.tpl');
-    }
-
-    public function hookDisplayRightColumn($params)
-    {
-        return $this->hookDisplayLeftColumn($params);
-    }
-
-    public function hookActionFrontControllerSetMedia()
-    {
-        $this->context->controller->registerStylesheet(
-            'appointmentmanager-style',
-            'modules/' . $this->name . '/views/css/appointmentmanager.css',
-            [
-                'media' => 'all',
-                'priority' => 1000,
-            ]
-        );
+    
+        return $this->fetch('module:appointmentmanager/views/templates/hook/appointment_invite.tpl');
     }
 
     public function isUsingNewTranslationSystem()
     {
         return true;
     }
-
-    // public function getContent()
-    // {
-    //     $route = $this->get('router')->generate('appointment_manager_config');
-
-    //     $testService = $this->get('PrestaShop\Module\AppointmentManager\Service\TestService'); // Try to get the test service
-    //     if ($testService) {
-    //         $message = $testService->testMethod();
-    //         die("Service is working: " . $message); // If it works, display a message and stop
-    //     } else {
-    //         die("Service NOT found in container!"); // If service is not found, display error
-    //     }
-
-    //     Tools::redirectAdmin($route); // This line will not be reached if die() is executed above
-    // }
 
     public function getContent()
     {

@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\AppointmentManager\Controller\Front;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use PrestaShopBundle\Controller\Front\FrontController;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Symfony\Component\Routing\RouterInterface;
 
-class AppointmentInviteController extends AbstractController
+class AppointmentManagerInviteController extends FrontController
 {
     public function index(): Response
     {
@@ -28,7 +28,7 @@ class AppointmentInviteController extends AbstractController
             \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return $this->render('@Modules/appointmentmanager/views/templates/hook/appointment_invite.html.twig', [
+        return $this->render('@Modules/appointmentmanager/views/templates/hook/appointment_invite.tpl', [
             'appointment_link' => $link,
         ]);
     }

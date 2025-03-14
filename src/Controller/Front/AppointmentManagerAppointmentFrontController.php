@@ -23,32 +23,33 @@ class AppointmentManagerAppointmentFrontController extends FrontController
 {
     public function index(Request $request, Connection $connection): Response
     {
-        $form = $this->createForm(AppointmentType::class);
+        $form = $this->createForm(AppointmentManagerAppointmentFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
+            // Vérification : au moins un champ (phone ou email) doit être rempli
             if (empty($data['phone']) && empty($data['email'])) {
                 $this->addFlash('danger', 'Vous devez renseigner au moins un téléphone ou un email.');
-                return $this->redirectToRoute('appointment_form');
+            } else {
+                // Insertion en base de données
+                $connection->insert('appointment_manager', [
+                    'lastname' => $data['lastname'],
+                    'firstname' => $data['firstname'],
+                    'address' => $data['address'],
+                    'postal_code' => $data['postal_code'],
+                    'city' => $data['city'],
+                    'phone' => $data['phone'],
+                    'email' => $data['email'],
+                    'rdv_option_1' => $data['rdv_option_1'],
+                    'rdv_option_2' => $data['rdv_option_2'],
+                    'GDPR' => (new \DateTime())->format('Y-m-d H:i:s'),
+                ]);
+
+                $this->addFlash('success', 'Votre demande de rendez-vous a bien été enregistrée.');
+                return $this->redirectToRoute('appointment_front_form');
             }
-
-            $connection->insert('appointment_manager', [
-                'lastname' => $data['lastname'],
-                'firstname' => $data['firstname'],
-                'address' => $data['address'],
-                'postal_code' => $data['postal_code'],
-                'city' => $data['city'],
-                'phone' => $data['phone'],
-                'email' => $data['email'],
-                'rdv_option_1' => $data['rdv_option_1'],
-                'rdv_option_2' => $data['rdv_option_2'],
-                'GDPR' => (new \DateTime())->format('Y-m-d H:i:s'),
-            ]);
-
-            $this->addFlash('success', 'Votre demande de rendez-vous a bien été enregistrée.');
-            return $this->redirectToRoute('admin_appointment_front_form');
         }
 
         return $this->render('@Modules/appointmentmanager/views/templates/front/appointment_form.html.twig', [

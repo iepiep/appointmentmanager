@@ -2,7 +2,7 @@
     <h2>Besoin d'un rendez-vous ?</h2>
     <p>Nous sommes à votre disposition pour organiser un rendez-vous à votre convenance.</p>
 
-    <a href="{{ appointment_link }}" class="btn btn-primary btn-lg">Prendre un rendez-vous</a>
+    <a href="{$appointment_link}" class="btn btn-primary btn-lg">Prendre un rendez-vous</a>
 </div>
 
 <style>

@@ -20,7 +20,7 @@ admin_appointment_manager_itinerary:
   defaults:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerItineraryController::index'
 
-admin_appointment_front_form:
+appointment_front_form:
   path: /appointmentmanager/form
   methods: [GET, POST]
   defaults:
@@ -30,4 +30,4 @@ appointment_invite:
   path: /appointment/invite
   methods: [GET]
   defaults:
-    _controller: 'Modules\AppointmentManager\Controller\Front\AppointmentInviteController::index'
+    _controller: 'Modules\AppointmentManager\Controller\Front\AppointmentManagerInviteController::index'
