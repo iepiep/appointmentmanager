@@ -13,16 +13,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\AppointmentManager\Controller\Front;
 
-use PrestaShopBundle\Controller\Front\FrontController;
+//use PrestaShopBundle\Controller\Front\FrontController; // INCORRECT - C'est l'erreur!
+use ModuleFrontController; // CORRECT - C'est ça qu'il faut utiliser
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
 use Db;
 
-class AppointmentManagerAppointmentFrontController extends FrontController
+class AppointmentManagerAppointmentFrontController extends ModuleFrontController
 {
-    public function index(Request $request): Response
+    public function initContent()
     {
+        parent::initContent();
+
+        $request = $this->getRequest();
         $form = $this->createForm(AppointmentManagerAppointmentFormType::class);
         $form->handleRequest($request);
 
@@ -32,7 +36,6 @@ class AppointmentManagerAppointmentFrontController extends FrontController
             if (empty($data['phone']) && empty($data['email'])) {
                 $this->addFlash('danger', $this->trans('You must provide at least a phone number or an email address.', 'Modules.Appointmentmanager.Shop'));
             } else {
-                // Insertion en base de données (CORRIGÉ)
                 try {
                     $success = Db::getInstance()->insert('appointment_manager', [
                         'lastname' => pSQL($data['lastname']),
@@ -49,21 +52,21 @@ class AppointmentManagerAppointmentFrontController extends FrontController
 
                     if ($success) {
                         $this->addFlash('success', $this->trans('Your appointment request has been successfully registered.', 'Modules.Appointmentmanager.Shop'));
-                        // Redirection vers la même page (CORRIGÉ)
                         return $this->redirectToRoute('module-appointmentmanager-form');
                     } else {
                         $this->addFlash('danger', $this->trans('An error occurred while saving your request.', 'Modules.Appointmentmanager.Shop'));
                     }
 
                 } catch (\PrestaShopDatabaseException $e) {
-                     $this->addFlash('danger', $this->trans('An error occurred while saving your request.', 'Modules.Appointmentmanager.Shop').' '.$e->getMessage());
+                    $this->addFlash('danger', $this->trans('An error occurred while saving your request.', 'Modules.Appointmentmanager.Shop').' '.$e->getMessage());
                 }
-
             }
         }
 
-        return $this->render('@Modules/appointmentmanager/views/templates/front/appointment_form.html.twig', [
+        $this->context->smarty->assign([
             'appointmentForm' => $form->createView(),
         ]);
+
+        $this->setTemplate('module:appointmentmanager/views/templates/front/appointment_form.html.twig');
     }
 }
