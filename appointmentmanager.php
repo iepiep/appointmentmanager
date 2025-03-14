@@ -39,8 +39,8 @@ class AppointmentManager extends Module
 
         $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', [], 'Modules.Appointmentmanager.Admin');
 
-        if (!Configuration::get('APPOINTMENTMANAGER_NAME')) {
-            $this->warning = $this->trans('No name provided', [], 'Modules.Appointmentmanager.Admin');
+        if (!Configuration::get('APPOINTMENTMANAGER_GOOGLE_API_KEY')) {
+            $this->warning = $this->trans('No API key provided', [], 'Modules.Appointmentmanager.Admin');
         }
 
         $tabNames = [];
