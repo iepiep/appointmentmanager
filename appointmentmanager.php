@@ -130,7 +130,7 @@ class AppointmentManager extends Module
     public function hookDisplayHome($params)
     {
         $this->context->smarty->assign([
-            'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentInvite')
+            'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'AppointmentManagerAppointmentFrontController')
         ]);
 
         return $this->display(__FILE__, 'appointment_invite.tpl');
