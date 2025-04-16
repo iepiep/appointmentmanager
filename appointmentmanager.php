@@ -145,15 +145,12 @@ class AppointmentManager extends Module
                     // Log if router service itself is null, though get() should throw if not found
                      PrestaShopLogger::addLog('AppointmentManager: Router service resolved to null in hookDisplayHome.', 2);
                 }
-            } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException $e) {
-                // Log the error specifically if the service isn't found
-                PrestaShopLogger::addLog('AppointmentManager: Router service not found in hookDisplayHome. ' . $e->getMessage(), 2); // Log as warning
-                 // You could fallback to legacy link generation here if needed, but it's less ideal
-                // $appointmentFormUrl = $this->context->link->getModuleLink($this->name, 'AppointmentManagerAppointmentFront', [], true);
-            } catch (\Exception $e) {
-                // Catch any other errors during route generation
-                PrestaShopLogger::addLog('AppointmentManager: Error generating route in hookDisplayHome. ' . $e->getMessage(), 2); // Log as warning
-            }
+            } catch (\Symfony\Component\Routing\Exception\RouteNotFoundException $e) { // Catch this specifically
+                PrestaShopLogger::addLog('AppointmentManager: Route "appointment_manager_form" not found. Check routes.yml. ' . $e->getMessage(), 3); // Log as Error
+           } catch (\Exception $e) {
+                // Log details about other exceptions
+                PrestaShopLogger::addLog('AppointmentManager: Error generating route in hookDisplayHome. Type: ' . get_class($e) . ' Message: ' . $e->getMessage(), 2);
+           }
         } else {
              // Log if container itself isn't available
              PrestaShopLogger::addLog('AppointmentManager: Symfony container not available in hookDisplayHome.', 2);
