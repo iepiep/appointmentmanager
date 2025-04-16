@@ -26,7 +26,6 @@ class ComposerStaticInitdd4f2851d1e8d7fe3c17437f6d8e6c40
         'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerItineraryController' => __DIR__ . '/../..' . '/src/Controller/Admin/AppointmentManagerItineraryController.php',
         'PrestaShop\\Module\\AppointmentManager\\Controller\\AppointmentManagerConfigurationController' => __DIR__ . '/../..' . '/src/Controller/AppointmentManagerConfigurationController.php',
         'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentManagerAppointmentFrontController' => __DIR__ . '/../..' . '/src/Controller/Front/AppointmentManagerAppointmentFrontController.php',
-        'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentManagerInviteController' => __DIR__ . '/../..' . '/src/Controller/Front/AppointmentManagerInviteController.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerAppointmentFormType' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerAppointmentFormType.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerConfigFormType' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerConfigFormType.php',
         'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => __DIR__ . '/../..' . '/src/Form/AppointmentManagerDataConfig.php',

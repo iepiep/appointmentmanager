@@ -11,7 +11,6 @@ return array(
     'PrestaShop\\Module\\AppointmentManager\\Controller\\Admin\\AppointmentManagerItineraryController' => $baseDir . '/src/Controller/Admin/AppointmentManagerItineraryController.php',
     'PrestaShop\\Module\\AppointmentManager\\Controller\\AppointmentManagerConfigurationController' => $baseDir . '/src/Controller/AppointmentManagerConfigurationController.php',
     'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentManagerAppointmentFrontController' => $baseDir . '/src/Controller/Front/AppointmentManagerAppointmentFrontController.php',
-    'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentManagerInviteController' => $baseDir . '/src/Controller/Front/AppointmentManagerInviteController.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerAppointmentFormType' => $baseDir . '/src/Form/AppointmentManagerAppointmentFormType.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerConfigFormType' => $baseDir . '/src/Form/AppointmentManagerConfigFormType.php',
     'PrestaShop\\Module\\AppointmentManager\\Form\\AppointmentManagerDataConfig' => $baseDir . '/src/Form/AppointmentManagerDataConfig.php',

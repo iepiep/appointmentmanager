@@ -129,23 +129,41 @@ class AppointmentManager extends Module
 
     public function hookDisplayHome($params)
     {
-        // Get the Symfony router service
-        $router = $this->get('router');
-    
-        if (!$router) {
-            // Fallback or error handling if router is not available
-            return '';
+        $appointmentFormUrl = '#'; // Default/fallback URL
+
+        // **** GET CONTAINER EXPLICITLY ****
+        $container = SymfonyContainer::getInstance();
+
+        if ($container) {
+            try {
+                // **** GET ROUTER FROM CONTAINER ****
+                $router = $container->get('router');
+                if ($router) {
+                     // Generate the URL using the route name defined in routes.yml
+                    $appointmentFormUrl = $router->generate('appointment_manager_form');
+                } else {
+                    // Log if router service itself is null, though get() should throw if not found
+                     PrestaShopLogger::addLog('AppointmentManager: Router service resolved to null in hookDisplayHome.', 2);
+                }
+            } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException $e) {
+                // Log the error specifically if the service isn't found
+                PrestaShopLogger::addLog('AppointmentManager: Router service not found in hookDisplayHome. ' . $e->getMessage(), 2); // Log as warning
+                 // You could fallback to legacy link generation here if needed, but it's less ideal
+                // $appointmentFormUrl = $this->context->link->getModuleLink($this->name, 'AppointmentManagerAppointmentFront', [], true);
+            } catch (\Exception $e) {
+                // Catch any other errors during route generation
+                PrestaShopLogger::addLog('AppointmentManager: Error generating route in hookDisplayHome. ' . $e->getMessage(), 2); // Log as warning
+            }
+        } else {
+             // Log if container itself isn't available
+             PrestaShopLogger::addLog('AppointmentManager: Symfony container not available in hookDisplayHome.', 2);
         }
-    
-        // Generate the URL using the route name defined in routes.yml
-        $appointmentFormUrl = $router->generate('appointment_manager_form');
-    
+
         $this->context->smarty->assign([
-            // Use the correctly generated URL
-            'appointment_link' => $appointmentFormUrl
+            'appointment_link' => $appointmentFormUrl // Assign the generated or fallback URL
         ]);
-    
-        // Render the hook template (this part was already correct)
+
+        // Make sure the template path is correct relative to the module root
         return $this->display(__FILE__, 'views/templates/hook/appointment_invite.tpl');
     }
 
