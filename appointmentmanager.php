@@ -8,8 +8,6 @@
 * License: MIT License
 */
 
-namespace PrestaShop\Module\AppointmentManager;
-
 declare(strict_types=1);
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -132,7 +130,7 @@ class AppointmentManager extends Module
     public function hookDisplayHome($params)
     {
         $this->context->smarty->assign([
-            'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'AppointmentManagerAppointmentFrontController')
+            'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'AppointmentFrontController')
         ]);
 
         return $this->display(__FILE__, 'appointment_invite.tpl');
