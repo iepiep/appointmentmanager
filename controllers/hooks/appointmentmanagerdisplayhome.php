@@ -23,29 +23,12 @@ class AppointmentManagerInviteController extends ModuleFrontController
     {
         $link = $this->generateUrl('appointment_manager_form');
     
-        return $this->render('@Modules/appointmentmanager/views/templates/hook/appointment_invite.tpl', [
-            'appointment_link' => $link,
-        ]);
-
-
-
-        
+        // Assign variables to Smarty
         $this->context->smarty->assign([
             'form_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentmanagerdisplayhome')
         ]);
 
+        // Use the proper display method
         return $this->display(__FILE__, 'appointment_invite.tpl');
-
-
-
-
-
-    }    
+    }
 }
-
-
-$this->context->smarty->assign([
-    'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentmanagerdisplayhome')
-]);
-
-return $this->display(__FILE__, 'appointment_invite.tpl');
