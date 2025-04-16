@@ -149,18 +149,6 @@ class AppointmentManager extends Module
         return $this->display(__FILE__, 'views/templates/hook/appointment_invite.tpl');
     }
 
-// Helper method to get services (might already exist or use ContainerFinder)
-// Add this if you don't have a way to access the container easily in the main module file
-private function get($serviceName)
-{
-    // Use the Symfony Container Adapter for PS 8+
-    $container = SymfonyContainer::getInstance();
-    if ($container) {
-        return $container->get($serviceName);
-    }
-    return null;
-}
-
     public function getContent()
     {
         $route = $this->get('router')->generate('appointment_manager_config');
