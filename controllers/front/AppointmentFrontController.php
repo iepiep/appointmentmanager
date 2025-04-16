@@ -9,6 +9,8 @@
 * with this source code in the file LICENSE.
 */
 
+namespace PrestaShop\Module\AppointmentManager\Controller\Front;
+
 declare(strict_types=1);
 
 use ModuleFrontController;
@@ -17,17 +19,18 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Db;
 use ModuleFrontController;
+use PrestaShop\Adapter\Module\Hook;
+use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;
-use Db;
 
-class AppointmentManagerAppointmentFrontController extends ModuleFrontController
+
+class AppointmentFrontController extends \App\Controller\FrontController
 {
-    public function initContent()
+    public function index()
     {
-        parent::initContent();
 
         $request = $this->getRequest();
         $form = $this->createForm(AppointmentManagerAppointmentFormType::class);
@@ -71,6 +74,7 @@ class AppointmentManagerAppointmentFrontController extends ModuleFrontController
             'appointmentForm' => $form->createView(),
         ]);
 
-        $this->setTemplate('module:appointmentmanager/views/templates/front/appointment_form.html.twig');
+
+        return new Response($this->smarty->fetch('module:appointmentmanager/views/templates/front/appointment_form.html.twig'));
     }
 }

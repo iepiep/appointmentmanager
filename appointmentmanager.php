@@ -8,6 +8,8 @@
 * License: MIT License
 */
 
+namespace PrestaShop\Module\AppointmentManager;
+
 declare(strict_types=1);
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;

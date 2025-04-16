@@ -19,3 +19,12 @@ admin_appointment_manager_itinerary:
   methods: [GET, POST]
   defaults:
     _controller: 'PrestaShop\Module\AppointmentManager\Controller\Admin\AppointmentManagerItineraryController::index'
+
+# Route pour la page du formulaire front-office
+appointment_manager_form:
+    path: /rendez-vous
+    methods: [GET, POST]
+    group: frontoffice
+    main: true
+    defaults:
+        _controller: 'PrestaShop\\Module\\AppointmentManager\\Controller\\Front\\AppointmentFormController::index'
