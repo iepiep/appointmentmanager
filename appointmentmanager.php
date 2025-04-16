@@ -129,17 +129,37 @@ class AppointmentManager extends Module
 
     public function hookDisplayHome($params)
     {
+        // Get the Symfony router service
+        $router = $this->get('router');
+    
+        if (!$router) {
+            // Fallback or error handling if router is not available
+            return '';
+        }
+    
+        // Generate the URL using the route name defined in routes.yml
+        $appointmentFormUrl = $router->generate('appointment_manager_form');
+    
         $this->context->smarty->assign([
-            'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'AppointmentFrontController')
+            // Use the correctly generated URL
+            'appointment_link' => $appointmentFormUrl
         ]);
-
-        return $this->display(__FILE__, 'appointment_invite.tpl');
+    
+        // Render the hook template (this part was already correct)
+        return $this->display(__FILE__, 'views/templates/hook/appointment_invite.tpl');
     }
 
-    public function isUsingNewTranslationSystem()
-    {
-        return true;
+// Helper method to get services (might already exist or use ContainerFinder)
+// Add this if you don't have a way to access the container easily in the main module file
+private function get($serviceName)
+{
+    // Use the Symfony Container Adapter for PS 8+
+    $container = SymfonyContainer::getInstance();
+    if ($container) {
+        return $container->get($serviceName);
     }
+    return null;
+}
 
     public function getContent()
     {

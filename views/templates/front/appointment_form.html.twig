@@ -1,77 +1,72 @@
-{% extends 'page.tpl' %}
+{# FILE: views/templates/front/appointment_form.html.twig #}
 
-{% block content %}
-    <h2>Prendre un rendez-vous</h2>
+{# ** EXTEND A STANDARD PRESTASHOP LAYOUT ** #}
+{% extends '@PrestaShop/front-office/layout/layout-full-width.html.twig' %}
 
+{# Define page title if needed, though controller usually handles it #}
+{% block page_title %}
+    {{ 'Make an Appointment'|trans({}, 'Modules.Appointmentmanager.Shop') }}
+{% endblock %}
+
+{# ** USE THE CORRECT CONTENT BLOCK ** #}
+{% block page_content %}
+    <h2>{{ 'Make an Appointment'|trans({}, 'Modules.Appointmentmanager.Shop') }}</h2>
+
+    {# Display flash messages (already included in standard layouts usually) #}
+    {# You might not need this explicit loop if the layout handles it #}
     {% for message in app.flashes('success') %}
-        <div id="popup-message" class="popup-success">
+        <div class="alert alert-success" role="alert">
             {{ message }}
         </div>
     {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {# End flash messages #}
+
+    {# Use form_theme if you need custom styling, otherwise default PS styles apply #}
+    {# {% form_theme appointmentForm '@PrestaShop/Core/Themes/default/templates/_partials/form_fields.html.twig' %} #}
 
     {{ form_start(appointmentForm) }}
 
-    <div class="form-group">
-        {{ form_label(appointmentForm.lastname) }}
-        {{ form_widget(appointmentForm.lastname, {'attr': {'class': 'form-control'}}) }}
+    {# Use form_row for label, widget, and errors #}
+    {{ form_row(appointmentForm.lastname) }}
+    {{ form_row(appointmentForm.firstname) }}
+    {{ form_row(appointmentForm.address) }}
+    {{ form_row(appointmentForm.postal_code) }}
+    {{ form_row(appointmentForm.city) }}
+    {{ form_row(appointmentForm.phone) }}
+    {{ form_row(appointmentForm.email) }}
+    {{ form_row(appointmentForm.rdv_option_1) }}
+    {{ form_row(appointmentForm.rdv_option_2) }}
+
+    {# Custom rendering for GDPR Checkbox with link #}
+    <div class="form-group form-group-checkbox"> {# Add appropriate classes #}
+         <label class="form-check-label" for="{{ appointmentForm.GDPR.vars.id }}"> {# Use form-check-label for Bootstrap #}
+            {{ form_widget(appointmentForm.GDPR) }}
+             {# Use translation key for the text part #}
+            {{ 'I accept the {link_start}privacy policy{link_end}'|trans({'link_start': '<a href="' ~ url('cms_rule', {'cmsRuleId': 3}) ~ '" target="_blank">', 'link_end': '</a>'}, 'Modules.Appointmentmanager.Shop')|raw }}
+            {# Assuming Privacy Policy is CMS page with ID 3 - ADJUST IF NEEDED #}
+        </label>
+        {{ form_errors(appointmentForm.GDPR) }} {# Display errors if any #}
     </div>
 
-    <div class="form-group">
-        {{ form_label(appointmentForm.firstname) }}
-        {{ form_widget(appointmentForm.firstname, {'attr': {'class': 'form-control'}}) }}
+    <div class="form-footer text-center"> {# Wrap button for better styling #}
+        <button type="submit" class="btn btn-primary">
+            {{ 'Submit'|trans({}, 'Modules.Appointmentmanager.Shop') }}
+        </button>
     </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.address) }}
-        {{ form_widget(appointmentForm.address, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.postal_code) }}
-        {{ form_widget(appointmentForm.postal_code, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.city) }}
-        {{ form_widget(appointmentForm.city, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.phone) }}
-        {{ form_widget(appointmentForm.phone, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.email) }}
-        {{ form_widget(appointmentForm.email, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.rdv_option_1) }}
-        {{ form_widget(appointmentForm.rdv_option_1, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(appointmentForm.rdv_option_2) }}
-        {{ form_widget(appointmentForm.rdv_option_2, {'attr': {'class': 'form-control'}}) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_widget(appointmentForm.GDPR) }}
-        <label for="{{ appointmentForm.GDPR.vars.id }}">J’accepte la <a href="/politique-confidentialite" target="_blank">politique de confidentialité</a></label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Prendre rendez-vous</button>
 
     {{ form_end(appointmentForm) }}
 
+{% endblock %}
+
+{# Optional: Add custom JS/CSS #}
+{% block javascript_bottom %}
+    {{ parent() }}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (document.getElementById("popup-message")) {
-                setTimeout(function() {
-                    document.getElementById("popup-message").style.display = "none";
-                }, 5000);
-            }
-        });
+        // Your custom JS if needed
     </script>
 {% endblock %}
