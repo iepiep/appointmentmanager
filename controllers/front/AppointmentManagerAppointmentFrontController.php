@@ -11,9 +11,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\Module\AppointmentManager\Controller\Front;
+use ModuleFrontController;
 
-use PrestaShopBundle\Controller\Front\FrontController;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use ModuleFrontController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\Module\AppointmentManager\Form\AppointmentManagerAppointmentFormType;

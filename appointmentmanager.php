@@ -129,15 +129,11 @@ class AppointmentManager extends Module
 
     public function hookDisplayHome($params)
     {
-        // IMPORTANT : pour générer une URL vers le contrôleur Symfony,
-        // on doit indiquer le paramètre "use_route" => true
-        $appointmentLink = $this->context->link->getModuleLink('appointmentmanager', 'form', ['use_route' => true]);
-    
         $this->context->smarty->assign([
-            'appointment_link' => $appointmentLink,
+            'appointment_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentmanagerdisplayhome')
         ]);
-    
-        return $this->fetch('module:appointmentmanager/views/templates/hook/appointment_invite.tpl');
+
+        return $this->display(__FILE__, 'appointment_invite.tpl');
     }
 
     public function isUsingNewTranslationSystem()
