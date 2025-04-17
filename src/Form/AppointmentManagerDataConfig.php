@@ -16,6 +16,10 @@ namespace PrestaShop\Module\AppointmentManager\Form;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Configuration is used to save data to configuration table and retrieve from it.
  */

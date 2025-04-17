@@ -1,5 +1,4 @@
 <?php
-// FILE: modules/appointmentmanager/controllers/front/appointment.php
 
 if (!defined('_PS_VERSION_')) {
     exit;

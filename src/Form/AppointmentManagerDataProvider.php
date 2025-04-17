@@ -16,6 +16,10 @@ namespace PrestaShop\Module\AppointmentManager\Form;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Provider is responsible for providing form data, in this case, it is returned from the configuration component.
  *

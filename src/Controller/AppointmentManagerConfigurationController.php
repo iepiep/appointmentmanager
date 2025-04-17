@@ -17,6 +17,10 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AppointmentManagerConfigurationController extends FrameworkBundleAdminController
 {
     public function index(Request $request): Response
