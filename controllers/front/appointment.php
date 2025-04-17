@@ -21,7 +21,7 @@ class AppointmentManagerAppointmentModuleFrontController extends ModuleFrontCont
 
     public function setMedia()
     {
-        // Always call parent::setMedia() first to include default assets
+        PrestaShopLogger::addLog('AppointmentManager: setMedia() method executed.', 1); // Add this line
         parent::setMedia();
 
         // Register our custom JavaScript file
