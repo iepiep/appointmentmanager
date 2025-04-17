@@ -20,24 +20,25 @@ class AppointmentManagerAppointmentModuleFrontController extends ModuleFrontCont
     // public $php_self = 'module-appointmentmanager-appointment'; // Optional: For canonical URLs
 
     public function setMedia()
-    {
-        PrestaShopLogger::addLog('AppointmentManager: setMedia() method executed.', 1); // Add this line
-        parent::setMedia();
+{
+    // MUST BE FIRST
+    parent::setMedia();
+    PrestaShopLogger::addLog('AppointmentManager: setMedia() method executed.', 1); // Log after parent call
 
-        // Register our custom JavaScript file
-        // Path is relative to the module's root directory
-        $this->registerJavascript(
-            'module-appointmentmanager-form-js', // Unique ID for this script
-            'modules/' . $this->module->name . '/views/js/appointment-form.js', // Path to the JS file
-            ['priority' => 200, 'position' => 'bottom', 'server' => 'local'] // Options: low priority, load at bottom
-        );
-       
-        $this->registerStylesheet(
-            'module-appointmentmanager-form-css',
-            'modules/'.$this->module->name.'/views/css/appointment-form.css',
-             ['media' => 'all', 'priority' => 150, 'server' => 'local']
-         );
-    }
+    // Register JS
+    $this->registerJavascript(
+        'module-appointmentmanager-form-js',
+        'modules/' . $this->module->name . '/views/js/appointment-form.js',
+        ['priority' => 200, 'position' => 'bottom', 'server' => 'local']
+    );
+
+    // Register CSS
+    $this->registerStylesheet(
+        'module-appointmentmanager-form-css',
+        'modules/' . $this->module->name . '/views/css/appointment-form.css',
+        ['media' => 'all', 'priority' => 150, 'server' => 'local']
+    );
+}
 
     public function initContent()
     {
