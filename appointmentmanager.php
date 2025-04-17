@@ -128,41 +128,58 @@ class AppointmentManager extends Module
     }
 
     public function hookDisplayHome($params)
-    {
-        $appointmentFormUrl = '#'; // Default/fallback URL
+{
+    PrestaShopLogger::addLog('AppointmentManager: hookDisplayHome started.', 1);
 
-        // **** GET CONTAINER EXPLICITLY ****
-        $container = SymfonyContainer::getInstance();
+    $appointmentFormUrl = '#'; // Default/fallback URL
 
-        if ($container) {
-            try {
-                // **** GET ROUTER FROM CONTAINER ****
-                $router = $container->get('router');
-                if ($router) {
-                     // Generate the URL using the route name defined in routes.yml
-                    $appointmentFormUrl = $router->generate('appointment_manager_form');
-                } else {
-                    // Log if router service itself is null, though get() should throw if not found
-                     PrestaShopLogger::addLog('AppointmentManager: Router service resolved to null in hookDisplayHome.', 2);
-                }
-            } catch (\Symfony\Component\Routing\Exception\RouteNotFoundException $e) { // Catch this specifically
-                PrestaShopLogger::addLog('AppointmentManager: Route "appointment_manager_form" not found. Check routes.yml. ' . $e->getMessage(), 3); // Log as Error
-           } catch (\Exception $e) {
-                // Log details about other exceptions
-                PrestaShopLogger::addLog('AppointmentManager: Error generating route in hookDisplayHome. Type: ' . get_class($e) . ' Message: ' . $e->getMessage(), 2);
-           }
+    // **** TRY LEGACY LINK GENERATION ****
+    try {
+        // Construct the legacy controller name expected by getModuleLink
+        // It's usually the module name + controller name without 'Controller' suffix
+        // Your front controller CLASS is AppointmentManagerAppointmentFrontController
+        // So the legacy NAME is likely 'AppointmentManagerAppointmentFront'
+        $legacyControllerName = 'AppointmentManagerAppointmentFront'; // Or maybe just 'appointmentfront'? Check PS Link class usage. Let's try the former first.
+
+        PrestaShopLogger::addLog('AppointmentManager: Attempting legacy link generation for controller: ' . $legacyControllerName, 1);
+
+        // Use the context Link object
+        $appointmentFormUrl = $this->context->link->getModuleLink(
+            $this->name,              // Module name ('appointmentmanager')
+            $legacyControllerName,    // The legacy controller name
+            [],                       // Parameters (none needed here)
+            true                      // Enable SSL if active
+            // You might need to add id_lang and id_shop if context is missing, but usually not needed here
+        );
+
+        if (!$appointmentFormUrl || $appointmentFormUrl === $this->context->link->getPageLink('index')) {
+             // If it fails or returns the base URL, log an error. It means the legacy controller isn't discoverable.
+             PrestaShopLogger::addLog('AppointmentManager: Legacy link generation failed or returned index. Check controller name/setup for getModuleLink.', 3);
+             $appointmentFormUrl = '#error-legacy-link-failed';
         } else {
-             // Log if container itself isn't available
-             PrestaShopLogger::addLog('AppointmentManager: Symfony container not available in hookDisplayHome.', 2);
+             PrestaShopLogger::addLog('AppointmentManager: Legacy link generation successful. URL: ' . $appointmentFormUrl, 1);
         }
 
-        $this->context->smarty->assign([
-            'appointment_link' => $appointmentFormUrl // Assign the generated or fallback URL
-        ]);
-
-        // Make sure the template path is correct relative to the module root
-        return $this->display(__FILE__, 'views/templates/hook/appointment_invite.tpl');
+    } catch (\Exception $e) {
+        PrestaShopLogger::addLog('AppointmentManager: Exception during legacy link generation. Message: ' . $e->getMessage(), 3);
+        $appointmentFormUrl = '#error-legacy-link-exception';
     }
+
+
+    // Assign the final value to Smarty
+    PrestaShopLogger::addLog('AppointmentManager: Assigning URL to Smarty: ' . $appointmentFormUrl, 1);
+    $this->context->smarty->assign([
+        'appointment_link' => $appointmentFormUrl
+    ]);
+
+    // Render the template
+    $templateFile = 'views/templates/hook/appointment_invite.tpl';
+    PrestaShopLogger::addLog('AppointmentManager: Attempting to display template: ' . $templateFile, 1);
+    $output = $this->display(__FILE__, $templateFile);
+    PrestaShopLogger::addLog('AppointmentManager: hookDisplayHome finished.', 1);
+
+    return $output;
+}
 
     public function getContent()
     {
