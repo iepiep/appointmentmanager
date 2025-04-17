@@ -1,9 +1,5 @@
-{* FILE: modules/appointmentmanager/views/templates/front/appointment_form.tpl *}
-
-{**
- * Appointment request form template.
- * Uses Bootstrap 4 classes compatible with PrestaShop Classic theme.
- *}
+<link rel="stylesheet" href="{$urls.base_url}modules/appointmentmanager/views/css/appointment-form.css">
+<script src="{$urls.base_url}modules/appointmentmanager/views/js/appointment-form.js"></script>
 
 {capture name=path}
     {l s='Make an Appointment' mod='appointmentmanager'}
