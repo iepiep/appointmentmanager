@@ -26,4 +26,3 @@ appointment_manager_form:
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShop\Module\AppointmentManager\Controller\Front\AppointmentManagerAppointmentFrontController::index'
-        _legacy_controller: 'AppointmentManagerAppointmentFront'

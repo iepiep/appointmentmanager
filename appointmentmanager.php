@@ -127,57 +127,32 @@ class AppointmentManager extends Module
         }
     }
 
-    public function hookDisplayHome($params)
+public function hookDisplayHome($params)
 {
     PrestaShopLogger::addLog('AppointmentManager: hookDisplayHome started.', 1);
+    $appointmentFormUrl = '#';
 
-    $appointmentFormUrl = '#'; // Default/fallback URL
-
-    // **** TRY LEGACY LINK GENERATION ****
     try {
-        // Construct the legacy controller name expected by getModuleLink
-        // It's usually the module name + controller name without 'Controller' suffix
-        // Your front controller CLASS is AppointmentManagerAppointmentFrontController
-        // So the legacy NAME is likely 'AppointmentManagerAppointmentFront'
-        $legacyControllerName = 'AppointmentManagerAppointmentFront'; // Or maybe just 'appointmentfront'? Check PS Link class usage. Let's try the former first.
+        // **** CHANGE CONTROLLER NAME TO MATCH THE NEW FILE ****
+        $legacyControllerName = 'appointment'; // Use the simple name
 
         PrestaShopLogger::addLog('AppointmentManager: Attempting legacy link generation for controller: ' . $legacyControllerName, 1);
 
-        // Use the context Link object
+        // This will now generate a link to .../module/appointmentmanager/appointment
         $appointmentFormUrl = $this->context->link->getModuleLink(
-            $this->name,              // Module name ('appointmentmanager')
-            $legacyControllerName,    // The legacy controller name
-            [],                       // Parameters (none needed here)
-            true                      // Enable SSL if active
-            // You might need to add id_lang and id_shop if context is missing, but usually not needed here
+            $this->name,
+            $legacyControllerName, // Use the new name
+            [],
+            true
         );
 
-        if (!$appointmentFormUrl || $appointmentFormUrl === $this->context->link->getPageLink('index')) {
-             // If it fails or returns the base URL, log an error. It means the legacy controller isn't discoverable.
-             PrestaShopLogger::addLog('AppointmentManager: Legacy link generation failed or returned index. Check controller name/setup for getModuleLink.', 3);
-             $appointmentFormUrl = '#error-legacy-link-failed';
-        } else {
-             PrestaShopLogger::addLog('AppointmentManager: Legacy link generation successful. URL: ' . $appointmentFormUrl, 1);
-        }
+        // ... (rest of the try block and logging) ...
 
     } catch (\Exception $e) {
-        PrestaShopLogger::addLog('AppointmentManager: Exception during legacy link generation. Message: ' . $e->getMessage(), 3);
-        $appointmentFormUrl = '#error-legacy-link-exception';
+       // ... (catch block) ...
     }
 
-
-    // Assign the final value to Smarty
-    PrestaShopLogger::addLog('AppointmentManager: Assigning URL to Smarty: ' . $appointmentFormUrl, 1);
-    $this->context->smarty->assign([
-        'appointment_link' => $appointmentFormUrl
-    ]);
-
-    // Render the template
-    $templateFile = 'views/templates/hook/appointment_invite.tpl';
-    PrestaShopLogger::addLog('AppointmentManager: Attempting to display template: ' . $templateFile, 1);
-    $output = $this->display(__FILE__, $templateFile);
-    PrestaShopLogger::addLog('AppointmentManager: hookDisplayHome finished.', 1);
-
+    // ... (assign to smarty and display template) ...
     return $output;
 }
 
