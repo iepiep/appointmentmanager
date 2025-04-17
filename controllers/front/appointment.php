@@ -1,4 +1,12 @@
 <?php
+/**
+* @author Roberto Minini <r.minini@solution61.fr>
+* @copyright 2025 Roberto Minini
+* @license MIT
+*
+* This file is part of the AppointmentManager Module
+* License: MIT License
+*/
 
 if (!defined('_PS_VERSION_')) {
     exit;

@@ -21,7 +21,6 @@ class AppointmentManagerInviteController extends ModuleFrontController
 {
     public function initContent(): Response
     {
-        $link = $this->generateUrl('appointment_manager_form');
     
         // Assign variables to Smarty
         $this->context->smarty->assign([

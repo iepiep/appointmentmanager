@@ -206,8 +206,6 @@ public function hookDisplayHome($params)
     } catch (\Exception $e) {
          // Log any errors during the template rendering process
          PrestaShopLogger::addLog('AppointmentManager: Exception during template display in hookDisplayHome. Template: ' . $templateFile . '. Message: ' . $e->getMessage(), 3);
-         // Optionally, you could return a simple HTML error message here instead of an empty string
-         // $output = '<p>Error displaying appointment block.</p>';
     }
 
     // Log the end of the hook execution
