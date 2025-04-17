@@ -1,5 +1,9 @@
-<link rel="stylesheet" href="{$urls.base_url}modules/appointmentmanager/views/css/appointment-form.css">
-<script src="{$urls.base_url}modules/appointmentmanager/views/js/appointment-form.js"></script>
+<!-- <link rel="stylesheet" href="{$urls.base_url}modules/appointmentmanager/views/css/appointment-form.css">
+<script src="{$urls.base_url}modules/appointmentmanager/views/js/appointment-form.js"></script> -->
+
+{extends file='page.tpl'}
+
+{block name='page_content'}
 
 {capture name=path}
     {l s='Make an Appointment' mod='appointmentmanager'}
@@ -151,3 +155,4 @@
 
     </div> {* /.page-content *}
 </section> {* /#main *}
+{/block}
