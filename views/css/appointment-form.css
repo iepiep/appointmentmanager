@@ -1,0 +1,123 @@
+/**
+ * Custom Styles for Appointment Manager Form
+ * modules/appointmentmanager/views/css/appointment-form.css
+ */
+
+/* Style the overall form container if using page-content-box */
+.page-content-box #appointment-form {
+    padding-top: 1rem; /* Add some space below the title if box is used */
+}
+
+/* Add more specific container styling if needed */
+#appointment-form-section { /* Consider adding id="appointment-form-section" to the <section> in the tpl */
+    padding: 20px 30px;
+    background-color: #fdfdfd; /* Slightly off-white */
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Center the main heading */
+#appointment-form-section .h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #232323;
+}
+
+/* Style horizontal rules */
+#appointment-form hr {
+    margin-top: 1.8rem;
+    margin-bottom: 1.8rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Style form labels */
+#appointment-form .form-group label {
+    font-weight: 600; /* Make labels slightly bolder */
+    margin-bottom: .4rem; /* Adjust space below label */
+    color: #333;
+    display: inline-block; /* Ensure margin works */
+}
+
+#appointment-form .form-group label .text-muted { /* Style the '(Optional)' text */
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* Ensure consistent spacing between form groups */
+#appointment-form .form-group {
+    margin-bottom: 1.3rem;
+}
+
+/* Style the input and select elements */
+#appointment-form .form-control,
+#appointment-form .custom-select {
+    border-color: #ccc; /* Slightly darker border */
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+#appointment-form .form-control:focus,
+#appointment-form .custom-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+/* Style help text */
+#appointment-form .form-text {
+    font-size: 0.875em; /* Slightly smaller */
+    color: #6c757d;
+}
+
+/* Style the GDPR Checkbox area */
+#appointment-form .form-check {
+    margin-top: 1rem; /* Space above checkbox */
+    margin-bottom: 1.5rem;
+    padding-left: 1.75rem; /* Ensure label doesn't overlap box */
+}
+
+#appointment-form .form-check-label {
+    font-weight: normal; /* Normal weight for checkbox label */
+    color: #444;
+}
+
+#appointment-form .form-check-label a {
+    text-decoration: underline;
+    color: #007bff; /* Standard link blue */
+}
+
+#appointment-form .form-check-label a:hover {
+    color: #0056b3;
+}
+
+#appointment-form .form-check-input {
+    margin-top: 0.2rem; /* Adjust vertical alignment if needed */
+}
+
+/* Style required asterisk if added via span */
+ #appointment-form label .text-danger,
+ #appointment-form .form-check-label .text-danger {
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+/* Style the submit button container */
+#appointment-form .form-footer {
+    margin-top: 2rem; /* More space above the button */
+    padding-top: 1rem;
+    border-top: 1px solid #eee; /* Subtle separator */
+}
+
+/* Style the submit button */
+#appointment-form .form-footer .btn-primary {
+    padding: 12px 30px; /* Make button larger */
+    font-size: 1.1em;
+    font-weight: 600;
+    /* Add other button styles if desired */
+}
+
+/* Refine alert message spacing */
+.page-content .alert {
+    margin-bottom: 1.5rem;
+}

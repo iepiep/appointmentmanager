@@ -12,6 +12,26 @@ class AppointmentManagerAppointmentModuleFrontController extends ModuleFrontCont
     public $ssl = true;   // Recommended for forms
     // public $php_self = 'module-appointmentmanager-appointment'; // Optional: For canonical URLs
 
+    public function setMedia()
+    {
+        // Always call parent::setMedia() first to include default assets
+        parent::setMedia();
+
+        // Register our custom JavaScript file
+        // Path is relative to the module's root directory
+        $this->registerJavascript(
+            'module-appointmentmanager-form-js', // Unique ID for this script
+            'modules/' . $this->module->name . '/views/js/appointment-form.js', // Path to the JS file
+            ['priority' => 200, 'position' => 'bottom', 'server' => 'local'] // Options: low priority, load at bottom
+        );
+       
+        $this->registerStylesheet(
+            'module-appointmentmanager-form-css',
+            'modules/'.$this->module->name.'/views/css/appointment-form.css',
+             ['media' => 'all', 'priority' => 150, 'server' => 'local']
+         );
+    }
+
     public function initContent()
     {
         parent::initContent(); // Initialize context, CSS, JS

@@ -36,7 +36,7 @@
 
         {* Only show the form if success message isn't displayed *}
         {if !isset($appointment_success) || !$appointment_success}
-            <section class="page-content-box"> {* Add a box around the form *}
+            <section class="page-content-box" id="appointment-form-section"> {* Add a box around the form *}
                 <h2 class="text-center h2">{l s='Make an Appointment' mod='appointmentmanager'}</h2>
                 <hr>
 
@@ -155,27 +155,3 @@
 
     </div> {* /.page-content *}
 </section> {* /#main *}
-
-{* You might need some basic JS for Bootstrap's built-in validation feedback, or add custom JS *}
-{* Example using standard Bootstrap validation (add this script block if desired)
-<script>
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
-</script>
-*}
