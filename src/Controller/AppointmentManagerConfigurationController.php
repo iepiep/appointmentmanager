@@ -44,7 +44,7 @@ class AppointmentManagerConfigurationController extends FrameworkBundleAdminCont
         }
 
         return $this->render('@Modules/appointmentmanager/views/templates/admin/form.html.twig', [
-            'AppointmentManagerConfig' => $appointmentmanagerForm->createView()
+            'AppointmentManagerConfig' => $appointmentmanagerForm->createView(),
         ]);
     }
 }
