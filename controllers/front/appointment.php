@@ -28,7 +28,6 @@ class AppointmentManagerAppointmentModuleFrontController extends ModuleFrontCont
                 'server' => 'local',
             ]
         );
-    
         return true;
     }
 
