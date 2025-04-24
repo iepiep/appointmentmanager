@@ -151,7 +151,7 @@ class AppointmentManagerAppointmentModuleFrontController extends ModuleFrontCont
         $dates = [];
         $today = new \DateTime();
         $today->setTime(0, 0);
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 15; ++$i) {
             $date = clone $today;
             $date->modify("+$i days");
             // Skip Sat/Sunday (N=6,7)
