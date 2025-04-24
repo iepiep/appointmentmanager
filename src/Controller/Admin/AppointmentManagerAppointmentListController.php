@@ -24,7 +24,7 @@ class AppointmentManagerAppointmentListController extends FrameworkBundleAdminCo
     {
         $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'appointment_manager`';
 
-        $appointments = Db::getInstance()->executeS($sql);
+        $appointments = \Db::getInstance()->executeS($sql);
         return $this->render(
             '@Modules/appointmentmanager/views/templates/admin/customer_list.html.twig',
             [
