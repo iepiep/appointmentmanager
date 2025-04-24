@@ -17,24 +17,19 @@ class AppointmentManagerAppointmentModuleFrontController extends ModuleFrontCont
     // public $auth = false; // Set to true if login is required
     public $ssl = true;   // Recommended for forms
 
-    public function setMedia()
+    public function setMedia(): bool
     {
-        parent::setMedia();
-        PrestaShopLogger::addLog('AppointmentManager: setMedia() method executed.', 1);
-
-        // Register JS
-        $this->registerJavascript(
-            'module-appointmentmanager-form-js',
-            'modules/' . $this->module->name . '/views/js/appointment-form.js',
-            ['priority' => 200, 'position' => 'bottom', 'server' => 'local']
-        );
-
-        // Register CSS
         $this->registerStylesheet(
             'module-appointmentmanager-form-css',
             'modules/' . $this->module->name . '/views/css/appointment-form.css',
-            ['media' => 'all', 'priority' => 150, 'server' => 'local']
+            [
+                'media' => 'all',
+                'priority' => 150,
+                'server' => 'local',
+            ]
         );
+    
+        return true;
     }
 
     public function initContent()
