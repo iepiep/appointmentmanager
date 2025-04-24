@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Roberto Minini <r.minini@solution61.fr>
  * @copyright 2025 Roberto Minini
@@ -9,19 +10,19 @@
  * with this source code in the file LICENSE.
  */
 
- declare(strict_types=1);
+declare(strict_types=1);
 
- use ModuleFrontController;
- 
- if (!defined('_PS_VERSION_')) {
-     exit;
- }
+use ModuleFrontController;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class AppointmentManagerInviteController extends ModuleFrontController
 {
     public function initContent(): Response
     {
-    
+
         // Assign variables to Smarty
         $this->context->smarty->assign([
             'form_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentmanagerdisplayhome')
