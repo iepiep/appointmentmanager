@@ -15,7 +15,6 @@ use PrestaShop\Module\AppointmentManager\Service\ItineraryService;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Configuration;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -23,13 +22,15 @@ if (!defined('_PS_VERSION_')) {
 
 class AppointmentManagerItineraryController extends FrameworkBundleAdminController
 {
-    private $itineraryService;
+    private ItineraryService $itineraryService;
 
     public function __construct(ItineraryService $itineraryService)
     {
+        parent::__construct();
         $this->itineraryService = $itineraryService;
     }
 
+    // Calculate and display itinerary
     public function index(Request $request): Response
     {
         $selectedIds = $request->request->get('appointments', []);
@@ -40,20 +41,28 @@ class AppointmentManagerItineraryController extends FrameworkBundleAdminControll
             return $this->redirectToRoute('appointment_manager_appointment_list'); // Redirect back to the RDV list
         }
 
-        $googleApiKey = Configuration::get('APPOINTMENTMANAGER_GOOGLE_API_KEY');
+        // Use fully qualified name for global Configuration class
+        $googleApiKey = \Configuration::get('APPOINTMENTMANAGER_GOOGLE_API_KEY');
 
         try {
             $itineraryData = $this->itineraryService->calculateItinerary($selectedIds, $googleApiKey);
         } catch (\Exception $e) {
-            $this->addFlash('error', $this->trans('Error calculating itinerary: %error%', 'Modules.Appointmentmanager.Admin',  ['%error%' => $e->getMessage()]));
+            $this->addFlash('error', $this->trans(
+                'Error calculating itinerary: %error%',
+                'Modules.Appointmentmanager.Admin',
+                ['%error%' => $e->getMessage()],
+            ));
 
             return $this->redirectToRoute('appointment_manager_appointment_list');
         }
 
-        return $this->render('@Modules/appointmentmanager/views/templates/admin/itinerary.html.twig', [
-            'optimized_route' => $itineraryData['optimized_route'],
-            'itinerary_schedule' => $itineraryData['itinerary_schedule'],
-            'google_maps_api_key' => $googleApiKey,
-        ]);
+        return $this->render(
+            '@Modules/appointmentmanager/views/templates/admin/itinerary.html.twig',
+            [
+                'optimized_route' => $itineraryData['optimized_route'],
+                'itinerary_schedule' => $itineraryData['itinerary_schedule'],
+                'google_maps_api_key' => $googleApiKey,
+            ]
+        );
     }
 }
