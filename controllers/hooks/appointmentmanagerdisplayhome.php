@@ -19,7 +19,7 @@ if (!defined('_PS_VERSION_')) {
 
 class AppointmentManagerInviteController extends ModuleFrontController
 {
-    public function initContent(): Response
+    public function initContent():
     {
         // Assign variables to Smarty
         $this->context->smarty->assign([
