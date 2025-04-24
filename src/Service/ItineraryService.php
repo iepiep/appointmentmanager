@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
- namespace PrestaShop\Module\AppointmentManager\Service;
+namespace PrestaShop\Module\AppointmentManager\Service;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -30,7 +30,7 @@ class ItineraryService
         $sql = 'SELECT firstname, lastname, address, postal_code, city
                 FROM `' . _DB_PREFIX_ . 'appointment_manager`
                 WHERE id_appointment_manager IN (' . $idsString . ')';
-        $results = \Db::getInstance()->executeS($sql);       
+        $results = \Db::getInstance()->executeS($sql);
 
         $clients = [];
         foreach ($results as $row) {
