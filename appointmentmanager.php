@@ -41,9 +41,10 @@ class AppointmentManager extends Module
             $this->warning = $this->trans('No API key provided', [], 'Modules.Appointmentmanager.Admin');
         }
 
+        // Note: This $tabNames variable seems unused later in the constructor.
+        // Consider removing if it's truly not needed.
         $tabNames = [];
         foreach (Language::getLanguages(true) as $lang) {
-            // Changed array() to []
             $tabNames[$lang['locale']] = $this->trans('Link List', [], 'Modules.Linklist.Admin', $lang['locale']);
         }
 
@@ -102,13 +103,12 @@ class AppointmentManager extends Module
             if (!empty($trimmedQuery)) {
                 try {
                     if (!Db::getInstance()->execute($trimmedQuery)) {
-                        // Log specific query failure?
                         PrestaShopLogger::addLog('SQL Install Error: Failed executing query.', 3);
                         return false;
                     }
                 } catch (Exception $e) {
                     PrestaShopLogger::addLog('SQL Install Exception: ' . $e->getMessage(), 3);
-                    return false; // Stop installation on exception
+                    return false;
                 }
             }
         }
@@ -132,16 +132,16 @@ class AppointmentManager extends Module
      * Displays the appointment invitation block.
      * Generates a link to the legacy front controller.
      */
-    public function hookDisplayHome($params)
+    public function hookDisplayHome($params): string // Added return type hint
     {
         // Generate the link, default to '#' if generation fails or returns index page link
         $link = $this->context->link;
         $generatedUrl = $link->getModuleLink($this->name, 'appointment', [], true);
         $appointmentLink = ($generatedUrl && $generatedUrl !== $link->getPageLink('index')) ? $generatedUrl : '#';
-    
+
         // Assign link to Smarty
         $this->context->smarty->assign('appointment_link', $appointmentLink);
-    
+
         // Directly display the template
         return (string) $this->display(__FILE__, 'views/templates/hook/appointment_invite.tpl');
     }
@@ -151,12 +151,13 @@ class AppointmentManager extends Module
         // Use service retrieval recommended in PS 8+
         $router = $this->get('router');
         if (null === $router) {
-             // Handle error: router service not found (log, throw exception, or fallback)
-             Tools::redirectAdmin($this->context->link->getAdminLink('AdminDashboard')); // Fallback example
-             return;
+            // Handle error: router service not found (log, throw exception, or fallback)
+            // Corrected indentation below
+            Tools::redirectAdmin($this->context->link->getAdminLink('AdminDashboard')); // Fallback example
+            return;
         }
         $route = $router->generate('appointment_manager_config');
         Tools::redirectAdmin($route);
-        // exit; // Good practice after a redirect, though Tools::redirectAdmin often handles it.
+        // exit; // Consider uncommenting if Tools::redirectAdmin doesn't exit reliably
     }
 }
