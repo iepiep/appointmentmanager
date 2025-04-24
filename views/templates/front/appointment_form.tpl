@@ -15,8 +15,6 @@
  * @copyright 2025 Solution61
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<!-- <link rel="stylesheet" href="{$urls.base_url}modules/appointmentmanager/views/css/appointment-form.css">
-<script src="{$urls.base_url}modules/appointmentmanager/views/js/appointment-form.js"></script> -->
 
 {extends file='page.tpl'}
 
@@ -34,8 +32,6 @@
         {if isset($appointment_success) && $appointment_success}
             <div class="alert alert-success" role="alert">
                 <p>{l s='Your appointment request has been successfully registered.' mod='appointmentmanager'}</p>
-                {* Optional: Add a link back to home or account *}
-                <a href="{$urls.pages.index}" class="btn btn-secondary btn-sm mt-2">{l s='Back to home' mod='appointmentmanager'}</a>
             </div>
         {/if}
 
