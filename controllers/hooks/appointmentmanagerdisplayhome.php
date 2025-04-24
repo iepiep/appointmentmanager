@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @author Roberto Minini <r.minini@solution61.fr>
  * @copyright 2025 Roberto Minini
@@ -25,7 +24,7 @@ class AppointmentManagerInviteController extends ModuleFrontController
 
         // Assign variables to Smarty
         $this->context->smarty->assign([
-            'form_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentmanagerdisplayhome')
+            'form_link' => $this->context->link->getModuleLink('appointmentmanager', 'appointmentmanagerdisplayhome'),
         ]);
 
         // Use the proper display method
